@@ -3,7 +3,8 @@ class Main extends React.Component {
     super(props)
     this.state = {
       searchTerm: "",
-      results: []
+      results: [],
+      source: "plex"
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -26,7 +27,12 @@ class Main extends React.Component {
         search_term: this.state.searchTerm
       })
     }).then(res => res.json())
-      .then(console.log)
+      .then(({ results, source }) => {
+        this.setState({
+          results,
+          source
+        })
+      })
   }
 
   render() {
@@ -34,7 +40,7 @@ class Main extends React.Component {
       <div>
         <h1>Film Findr</h1>
         <SearchBar searchTerm={this.state.searchTerm} handleChange={this.handleChange} handleSubmit={this.handleSubmit}/>
-        <Results results={this.state.results}/>
+        {(this.state.results.length > 0 || this.state.source == "not found") && <Results results={this.state.results} source={this.state.source}/>}
       </div>
     )
   }
