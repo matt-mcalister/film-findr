@@ -2,13 +2,13 @@ const Results = ({results, source}) => {
     switch (source) {
       case "plex":
         return (
-          <div>
+          <div className="flex">
             {results.map(item => <PlexItem {...item} />)}
           </div>
         )
       case "yts":
         return (
-          <div>
+          <div className="flex">
             {results.map(item => <YTSItem {...item} />)}
           </div>
         )
