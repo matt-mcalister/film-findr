@@ -1,7 +1,6 @@
 class Api::V1::FilmsController < ApplicationController
   skip_before_action :verify_authenticity_token
   def search
-    # byebug
     base_url = "http://127.0.0.1:32400"
     token = "EJMAqACEwzswyYszGpsb"
     term = params[:search_term]
@@ -25,6 +24,6 @@ class Api::V1::FilmsController < ApplicationController
   end
 
   def download
-
+    `open magnet:?xt=urn:btih:#{params[:hash]}&dn=#{params[:slug]}&tr=udp://tracker.openbittorrent.com:80`
   end
 end
