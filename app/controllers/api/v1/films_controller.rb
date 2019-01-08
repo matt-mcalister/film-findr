@@ -10,16 +10,26 @@ class Api::V1::FilmsController < ApplicationController
         "X-Plex-Token" => token
       }
     }
-    response = HTTParty.get("#{base_url}/search?query=#{term}", options)
-    if response && response["MediaContainer"]["Metadata"] && response["MediaContainer"]["Metadata"].length > 0
-      render json: {results: response["MediaContainer"]["Metadata"], source: "plex"}
+    plex_response = HTTParty.get("#{base_url}/search?query=#{term}", options)
+    yts_response = HTTParty.get("https://yts.am/api/v2/list_movies.json?quality=1080p&limit=50&query_term=#{term}")
+    # if response && response["MediaContainer"]["Metadata"] && response["MediaContainer"]["Metadata"].length > 0
+    #   render json: {results: response["MediaContainer"]["Metadata"], source: "plex"}
+    # else
+    #   if response["data"]["movies"]
+    #     render json: {results: response["data"]["movies"], source: "yts"}
+    #   else
+    #     render json: {results: [], source: "not found"}
+    #   end
+    # end
+
+    if (plex_response && plex_response["MediaContainer"]["Metadata"] && plex_response["MediaContainer"]["Metadata"].length > 0) || yts_response && yts_response["data"]["movies"]
+      render json: {
+        results_found: true,
+        plex: { results: plex_response["MediaContainer"]["Metadata"] },
+        yts: { results: yts_response["data"]["movies"] }
+      }
     else
-      response = HTTParty.get("https://yts.am/api/v2/list_movies.json?quality=1080p&limit=50&query_term=#{term}")
-      if response["data"]["movies"]
-        render json: {results: response["data"]["movies"], source: "yts"}
-      else
-        render json: {results: [], source: "not found"}
-      end
+      render json: { results_found: false }
     end
   end
 
