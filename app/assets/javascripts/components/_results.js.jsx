@@ -3,18 +3,24 @@ const Results = ({results, source}) => {
       case "plex":
         return (
           <React.Fragment>
-            <h2>PLEX</h2>
+            <h2>CURRENTLY IN PLEX:</h2>
             <div className="flex">
-              {results.map(item => <PlexItem key={item.id} {...item} />)}
+              { results.length > 0 ?
+                results.map(item => <PlexItem key={item.id} {...item} />) :
+                <p>Not Found</p>
+              }
             </div>
           </React.Fragment>
         )
       case "yts":
         return (
           <React.Fragment>
-            <h2>YTS</h2>
+            <h2>ADD TO PLEX:</h2>
             <div className="flex">
-              {results.map(item => <YTSItem key={item.id} {...item} />)}
+              { results.length > 0 ?
+                results.map(item => <YTSItem key={item.id} {...item} />) :
+                <p>Not Found</p>
+              }
             </div>
           </React.Fragment>
         )
