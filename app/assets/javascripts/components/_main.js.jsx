@@ -5,7 +5,8 @@ class Main extends React.Component {
       searchTerm: "",
       plexResults: [],
       ytsResults: [],
-      results_found: false
+      results_found: false,
+      searchMade: false,
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -28,11 +29,23 @@ class Main extends React.Component {
         search_term: this.state.searchTerm
       })
     }).then(res => res.json())
-      .then(({ results, source }) => {
-        this.setState({
-          results,
-          source
-        })
+      .then((json) => {
+        console.log(json)
+        if (json.results_found) {
+          const ytsResults = json.yts.results || []
+          const plexResults = json.plex.results || []
+          this.setState({
+            searchMade: true,
+            results_found: true,
+            ytsResults: ytsResults,
+            plexResults: plexResults
+          })
+        } else {
+            this.setState({
+              searchMade: true,
+              results_found: true
+            })
+        }
       })
   }
 
@@ -41,7 +54,7 @@ class Main extends React.Component {
       <div>
         <h1>Film Findr</h1>
         <SearchBar searchTerm={this.state.searchTerm} handleChange={this.handleChange} handleSubmit={this.handleSubmit}/>
-        { this.state.searchTerm != "" && !this.state.results_found && <h2>Not Found, try refining your search</h2>}
+        { this.state.searchMade && !this.state.results_found && <h2>Not Found, try refining your search</h2>}
         { this.state.results_found && <Results source="plex" results={this.state.plexResults} />}
         { this.state.results_found && <Results source="yts" results={this.state.ytsResults} />}
       </div>

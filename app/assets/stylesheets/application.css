@@ -31,3 +31,7 @@
   min-width: 300px;
   width: 25vw;
 }
+
+.plex > img {
+  width: 230px;
+}
