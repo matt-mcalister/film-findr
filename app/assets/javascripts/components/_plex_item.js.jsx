@@ -7,12 +7,15 @@ class PlexItem extends React.Component {
   }
 
   componentDidMount(){
-    fetch("http://127.0.0.1:32400" + this.props.thumb, {
-       headers: {
-          "Accept":"application/json",
-          "X-Plex-Token":"EJMAqACEwzswyYszGpsb"
-      }
-      }).then(res => res.blob()).then(blob => {
+    fetch("/api/v1/films/thumbnail", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        thumb: this.props.thumb
+      })
+    }).then(res => res.blob()).then(blob => {
         const image_url = URL.createObjectURL(blob)
          this.setState({
            image_url: image_url

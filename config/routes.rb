@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
      post '/films', to: 'films#search'
      post '/films/download', to: 'films#download'
+     post '/films/thumbnail', to: 'films#thumbnail'
     end
   end
 
