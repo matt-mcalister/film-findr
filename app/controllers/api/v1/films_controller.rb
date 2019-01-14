@@ -17,12 +17,19 @@ class Api::V1::FilmsController < ApplicationController
     plex_response = HTTParty.get("#{@@base_url}/search?query=#{term}", @@options)
     yts_response = HTTParty.get("https://yts.am/api/v2/list_movies.json?quality=1080p&limit=50&query_term=#{term}")
 
+    if plex_response && plex_response["MediaContainer"]["Metadata"] && plex_response["MediaContainer"]["Metadata"].length > 0
+      plex_results = plex_response["MediaContainer"]["Metadata"]
+    end
 
-    if plex_response && plex_response["MediaContainer"]["Metadata"] && plex_response["MediaContainer"]["Metadata"].length > 0 || yts_response && yts_response["data"]["movies"]
+    if yts_response && yts_response["data"]["movies"]
+      yts_results = yts_response["data"]["movies"].uniq
+    end
+
+    if plex_results || yts_response && yts_results
       render json: {
         results_found: true,
-        plex: { results: plex_response["MediaContainer"]["Metadata"] },
-        yts: { results: yts_response["data"]["movies"] }
+        plex: { results: plex_results },
+        yts: { results: yts_results }
       }
     else
       render json: { results_found: false }
