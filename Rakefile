@@ -9,7 +9,7 @@ desc "Moves all .mp4 files from /Movies/Bit/auto-added/ folder to plex/movies fo
 task :move_downloaded_files do
   puts "BEGINNING ADD"
   queue = Dir["/Users/MattMcAlister/Movies/Bit/auto-added/**/*.mp4"]
-  destination_path = "/Volumes/plexserv/test"
+  destination_path = "/Volumes/plexserv/Movies"
   puts "EXECUTING"
   queue.each do |original_path|
     puts "ORIGINAL PATH: #{original_path}"
