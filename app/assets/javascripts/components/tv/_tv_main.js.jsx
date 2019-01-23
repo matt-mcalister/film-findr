@@ -1,4 +1,4 @@
-class FilmMain extends React.Component {
+class TVMain extends React.Component {
   constructor(props){
     super(props)
     this.state = {
