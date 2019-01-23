@@ -9,5 +9,6 @@ Rails.application.routes.draw do
     end
   end
   get "/tv", to: "home#tv"
+  get "/film", to: 'home#index'
   root to: 'home#index'
 end

@@ -1,4 +1,4 @@
-const Results = ({results, source}) => {
+const Results = ({results, source, selectShow}) => {
     switch (source) {
       case "plex":
         return (
@@ -6,7 +6,7 @@ const Results = ({results, source}) => {
             <h2>CURRENTLY IN PLEX:</h2>
             <div className="flex">
               { results.length > 0 ?
-                results.map(item => <PlexItem key={item.id} {...item} />) :
+                results.map(item => <PlexItem key={item.id} {...item} selectShow={selectShow}/>) :
                 <p>Not Found</p>
               }
             </div>
@@ -30,7 +30,7 @@ const Results = ({results, source}) => {
             <h2>ADD TO PLEX:</h2>
             <div className="flex">
               { results.length > 0 ?
-                results.map(item => <OMDBItem key={item.imdbID} {...item} />) :
+                results.map(item => <OMDBItem key={item.imdbID} {...item}  selectShow={selectShow}/>) :
                 <p>Not Found</p>
               }
             </div>
