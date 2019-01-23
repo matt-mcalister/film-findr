@@ -24,6 +24,18 @@ const Results = ({results, source}) => {
             </div>
           </React.Fragment>
         )
+      case "omdb":
+        return (
+          <React.Fragment>
+            <h2>ADD TO PLEX:</h2>
+            <div className="flex">
+              { results.length > 0 ?
+                results.map(item => <OMDBItem key={item.imdbID} {...item} />) :
+                <p>Not Found</p>
+              }
+            </div>
+          </React.Fragment>
+        )
       case "not found":
         return <h3>Not Found</h3>
       default:
