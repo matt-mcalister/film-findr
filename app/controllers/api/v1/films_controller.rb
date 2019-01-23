@@ -46,9 +46,18 @@ class Api::V1::FilmsController < ApplicationController
     plex_response = HTTParty.get("#{@@base_url}/library/sections/2/search?type=2&query=#{term}", @@options)
     plex_results = []
     omdb_results = OMDBQuery.new(term).search
-    
+
     if plex_response && plex_response["MediaContainer"]["Metadata"] && plex_response["MediaContainer"]["Metadata"].length > 0
       plex_results = plex_response["MediaContainer"]["Metadata"]
+      omdb_results.reject! do |show|
+        plex_results.any? do |s|
+          if s["title"] == show["Title"] && s["year"] == show["Year"].to_i
+            s["imdbID"] = show["imdbID"]
+          else
+            false
+          end
+        end
+      end
     end
 
     if plex_results || omdb_results

@@ -23,10 +23,11 @@ class PlexItem extends React.Component {
       })
   }
   render(){
+    console.log(this.props);
     return(
       <div className="item plex">
-      <img src={this.state.image_url} alt={this.props.title} />
-      <h4>{this.props.title} ({this.props.year})</h4>
+        <img src={this.state.image_url} alt={this.props.title} />
+        <h4>{this.props.title} ({this.props.year})</h4>
       </div>
     )
   }
