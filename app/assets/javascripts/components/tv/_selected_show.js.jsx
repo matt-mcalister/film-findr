@@ -1,9 +1,10 @@
 class SelectedShow extends React.Component {
   render(){
-    console.log(this.props);
+    const { title, image_url } = this.props.selectedShow
     return (
       <div id="selected-show">
-        {this.props.selectedShow.title}
+        <h1>{title}</h1>
+        <img src={image_url} alt={title} />
       </div>
     )
   }

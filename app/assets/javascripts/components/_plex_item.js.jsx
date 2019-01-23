@@ -25,7 +25,9 @@ class PlexItem extends React.Component {
   }
 
   handleClick(){
-    this.props.selectShow(this.props)
+    let show = {...this.props, image_url: this.state.image_url}
+    delete show.selectShow
+    this.props.selectShow(show)
   }
 
   render(){
