@@ -7,6 +7,6 @@ Rails.application.routes.draw do
      post '/films/thumbnail', to: 'films#thumbnail'
     end
   end
-
+  get "/tv", to: "home#tv"
   root to: 'home#index'
 end

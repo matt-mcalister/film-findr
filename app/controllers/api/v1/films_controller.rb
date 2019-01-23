@@ -15,7 +15,8 @@ class Api::V1::FilmsController < ApplicationController
     term = params[:search_term]
 
     plex_response = HTTParty.get("#{@@base_url}/search?query=#{term}", @@options)
-    yts_response = HTTParty.get("https://yts.am/api/v2/list_movies.json?quality=1080p&limit=50&query_term=#{term}")
+    # yts_response = HTTParty.get("https://yts.am/api/v2/list_movies.json?quality=1080p&limit=50&query_term=#{term}")
+    yts_response = nil
     plex_results = []
     yts_results = []
     if plex_response && plex_response["MediaContainer"]["Metadata"] && plex_response["MediaContainer"]["Metadata"].length > 0
