@@ -6,13 +6,9 @@ class Api::V1::FilmsController < ApplicationController
 
     term = params[:search_term]
 
-    # plex_response = HTTParty.get("#{@@base_url}/library/sections/1/search?type=1&query=#{term}", @@options)
     yts_response = nil
     plex_results = PlexAPI::Query.new(term, :film).search
     yts_results = []
-    # if plex_response && plex_response["MediaContainer"]["Metadata"] && plex_response["MediaContainer"]["Metadata"].length > 0
-    #   plex_results = plex_response["MediaContainer"]["Metadata"]
-    # end
 
     if yts_response && yts_response["data"]["movies"]
       yts_results = yts_response["data"]["movies"].uniq
