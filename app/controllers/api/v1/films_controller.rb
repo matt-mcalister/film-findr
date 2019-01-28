@@ -1,27 +1,18 @@
 class Api::V1::FilmsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  @@base_url = "http://127.0.0.1:32400"
-  @@token = "EJMAqACEwzswyYszGpsb"
-  @@options = {
-    headers: {
-      "Accept" => "application/json",
-      "X-Plex-Token" => @@token
-    }
-  }
 
   def search
 
     term = params[:search_term]
 
-    plex_response = HTTParty.get("#{@@base_url}/library/sections/1/search?type=1&query=#{term}", @@options)
-    # yts_response = HTTParty.get("https://yts.am/api/v2/list_movies.json?quality=1080p&limit=50&query_term=#{term}")
+    # plex_response = HTTParty.get("#{@@base_url}/library/sections/1/search?type=1&query=#{term}", @@options)
     yts_response = nil
-    plex_results = []
+    plex_results = PlexAPI::Query.new(term, :film).search
     yts_results = []
-    if plex_response && plex_response["MediaContainer"]["Metadata"] && plex_response["MediaContainer"]["Metadata"].length > 0
-      plex_results = plex_response["MediaContainer"]["Metadata"]
-    end
+    # if plex_response && plex_response["MediaContainer"]["Metadata"] && plex_response["MediaContainer"]["Metadata"].length > 0
+    #   plex_results = plex_response["MediaContainer"]["Metadata"]
+    # end
 
     if yts_response && yts_response["data"]["movies"]
       yts_results = yts_response["data"]["movies"].uniq
@@ -43,19 +34,15 @@ class Api::V1::FilmsController < ApplicationController
 
     term = params[:search_term]
 
-    plex_response = HTTParty.get("#{@@base_url}/library/sections/2/search?type=2&query=#{term}", @@options)
-    plex_results = []
+    plex_results = PlexAPI::Query.new(term, :tv).search
     omdb_results = OMDBQuery.new(term).search
 
-    if plex_response && plex_response["MediaContainer"]["Metadata"] && plex_response["MediaContainer"]["Metadata"].length > 0
-      plex_results = plex_response["MediaContainer"]["Metadata"]
-      omdb_results.reject! do |show|
-        plex_results.any? do |s|
-          if s["title"] == show["Title"] && s["year"] == show["Year"].to_i
-            s["imdbID"] = show["imdbID"]
-          else
-            false
-          end
+    omdb_results.reject! do |show|
+      plex_results.any? do |s|
+        if s["title"] == show["Title"] && s["year"] == show["Year"].to_i
+          s["imdbID"] = show["imdbID"]
+        else
+          false
         end
       end
     end
@@ -72,7 +59,7 @@ class Api::V1::FilmsController < ApplicationController
   end
 
   def thumbnail
-    image_res = HTTParty.get("#{@@base_url}#{params[:thumb]}", @@options)
+    image_res = PlexAPI.image(params[:thumb])
     render plain: image_res.body
   end
 

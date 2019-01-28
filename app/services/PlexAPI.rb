@@ -19,6 +19,10 @@ module PlexAPI
     @@options
   end
 
+  def self.image(thumb)
+    HTTParty.get("#{@@base_url}#{thumb}", @@options)
+  end
+
   class Query
 
     attr_accessor :response, :results
