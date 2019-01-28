@@ -7,7 +7,7 @@ class Api::V1::FilmsController < ApplicationController
     term = params[:search_term]
 
     yts_response = nil
-    plex_results = PlexAPI::Query.new(term, :film).search
+    plex_results = PlexAPI::Query.new(term, :film).search || []
     yts_results = []
 
     if yts_response && yts_response["data"]["movies"]
@@ -30,7 +30,7 @@ class Api::V1::FilmsController < ApplicationController
 
     term = params[:search_term]
 
-    plex_results = PlexAPI::Query.new(term, :tv).search
+    plex_results = PlexAPI::Query.new(term, :tv).search || []
     omdb_results = OMDBQuery.new(term).search
 
     omdb_results.reject! do |show|

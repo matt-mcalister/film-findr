@@ -22,6 +22,8 @@ gem 'uglifier', '>= 1.3.0'
 
 # react and rails together
 gem 'react-rails'
+gem 'webpacker'
+
 gem 'httparty'
 
 # Use CoffeeScript for .coffee assets and views
