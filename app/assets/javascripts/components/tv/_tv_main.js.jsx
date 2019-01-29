@@ -4,7 +4,7 @@ class TVMain extends React.Component {
     this.state = {
       searchTerm: "",
       plexResults: [],
-      omdbResults: [],
+      tvdbResults: [],
       results_found: false,
       searchMade: false,
       selectedShow: null
@@ -34,11 +34,11 @@ class TVMain extends React.Component {
       .then((json) => {
         if (json.results_found) {
           const plexResults = json.plex.results || []
-          const omdbResults = json.omdb.results || []
+          const tvdbResults = json.tvdb.results || []
           this.setState({
             searchMade: true,
             results_found: true,
-            omdbResults: omdbResults,
+            tvdbResults: tvdbResults,
             plexResults: plexResults
           })
         } else {
@@ -67,7 +67,7 @@ class TVMain extends React.Component {
             { this.state.searchMade && !this.state.results_found && <h2>Not Found, try refining your search</h2>}
             { this.state.results_found && <Results source="plex" results={this.state.plexResults} selectShow={this.selectShow}/>}
             { this.state.results_found && <div id="line-break"/>}
-            { this.state.results_found && <Results source="omdb" results={this.state.omdbResults} selectShow={this.selectShow} />}
+            { this.state.results_found && <Results source="tvdb" results={this.state.tvdbResults} selectShow={this.selectShow} />}
           </React.Fragment>
         )
         :

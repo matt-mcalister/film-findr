@@ -24,13 +24,13 @@ const Results = ({results, source, selectShow}) => {
             </div>
           </React.Fragment>
         )
-      case "omdb":
+      case "tvdb":
         return (
           <React.Fragment>
             <h2>ADD TO PLEX:</h2>
             <div className="flex">
               { results.length > 0 ?
-                results.map(item => <OMDBItem key={item.imdbID} {...item}  selectShow={selectShow}/>) :
+                results.map(item => <TVDBItem key={item.id} {...item}  selectShow={selectShow}/>) :
                 <p>Not Found</p>
               }
             </div>

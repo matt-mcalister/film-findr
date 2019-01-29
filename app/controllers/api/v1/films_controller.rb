@@ -31,23 +31,23 @@ class Api::V1::FilmsController < ApplicationController
     term = params[:search_term]
 
     plex_results = PlexAPI::Query.new(term, :tv).search || []
-    omdb_results = OMDBQuery.new(term: term).search
+    tvdb_results = TVDBQuery.search_by_name(term)
 
-    omdb_results.reject! do |show|
+    tvdb_results.reject! do |show|
       plex_results.any? do |s|
-        if s["title"] == show["Title"] && s["year"] == show["Year"].to_i
-          s["omdb_content"] = show
+        if s["title"] == show["seriesName"] && s["year"] == show["firstAired"].to_i
+          s["tvdb_content"] = show
         else
           false
         end
       end
     end
 
-    if plex_results || omdb_results
+    if plex_results || tvdb_results
       render json: {
         results_found: true,
         plex: { results: plex_results },
-        omdb: { results: omdb_results }
+        tvdb: { results: tvdb_results }
       }
     else
       render json: { results_found: false }

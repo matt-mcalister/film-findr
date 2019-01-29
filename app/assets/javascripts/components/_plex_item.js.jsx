@@ -8,9 +8,9 @@ class PlexItem extends React.Component {
   }
 
   componentDidMount(){
-    if (this.props.omdb_content) {
+    if (this.props.tvdb_content) {
       this.setState({
-        image_url: this.props.omdb_content.Poster
+        image_url: this.props.tvdb_content.image_url
       })
     } else {
       fetch("/api/v1/films/thumbnail", {
@@ -41,7 +41,7 @@ class PlexItem extends React.Component {
       <div className="item plex">
         <img src={this.state.image_url} alt={this.props.title} />
         <h4>{this.props.title} ({this.props.year})</h4>
-        {this.props.omdb_content && <button onClick={this.handleClick}>View Seasons</button>}
+        {this.props.tvdb_content && <button onClick={this.handleClick}>View Seasons</button>}
       </div>
     )
   }
