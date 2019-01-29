@@ -23,6 +23,26 @@ module PlexAPI
     HTTParty.get("#{@@base_url}#{thumb}", @@options)
   end
 
+  def self.get_seasons(id)
+    seasons = {}
+    if id.nil?
+      return seasons
+    end
+    r = HTTParty.get("#{@@base_url}/library/metadata/#{id}/children", @@options)
+    if r && r.parsed_response["MediaContainer"]["Metadata"]
+      r.parsed_response["MediaContainer"]["Metadata"].each do |season|
+        seasons[season["index"]] ||= {}
+        season_r = HTTParty.get("#{@@base_url}#{season["key"]}", @@options)
+        if season_r && season_r.parsed_response["MediaContainer"]["Metadata"]
+          season_r.parsed_response["MediaContainer"]["Metadata"].each do |episode|
+            seasons[season["index"]][episode["index"]] = episode
+          end
+        end
+      end
+    end
+    seasons
+  end
+
   class Query
 
     attr_accessor :response, :results

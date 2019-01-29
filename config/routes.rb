@@ -6,6 +6,7 @@ Rails.application.routes.draw do
      post '/films/download', to: 'films#download'
      post '/films/thumbnail', to: 'films#thumbnail'
      post '/films/tv', to: 'films#tv_search'
+     post '/films/get_seasons', to: 'films#get_seasons'
     end
   end
   get "/tv", to: "home#tv"

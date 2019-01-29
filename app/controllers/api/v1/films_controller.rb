@@ -54,6 +54,11 @@ class Api::V1::FilmsController < ApplicationController
     end
   end
 
+  def get_seasons
+    seasons = TVDBQuery.get_seasons(tvdb_id: params[:tvdb_id], plex_id: params[:tvdb_id])
+    render json: seasons
+  end
+
   def thumbnail
     image_res = PlexAPI.image(params[:thumb])
     render plain: image_res.body
