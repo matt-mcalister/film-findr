@@ -36,7 +36,7 @@ class Api::V1::FilmsController < ApplicationController
     omdb_results.reject! do |show|
       plex_results.any? do |s|
         if s["title"] == show["Title"] && s["year"] == show["Year"].to_i
-          s["imdbID"] = show["imdbID"]
+          s["omdb_content"] = show
         else
           false
         end

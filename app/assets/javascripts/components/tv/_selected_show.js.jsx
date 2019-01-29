@@ -1,10 +1,11 @@
 class SelectedShow extends React.Component {
   render(){
-    const { title, image_url } = this.props.selectedShow
+    console.log(this.props);
+    const { Title, Poster } = this.props.selectedShow.omdb_content
     return (
       <div id="selected-show">
-        <h1>{title}</h1>
-        <img src={image_url} alt={title} />
+        <h1>{Title}</h1>
+        <img src={Poster} alt={Title} />
       </div>
     )
   }
