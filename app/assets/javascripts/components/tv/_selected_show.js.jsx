@@ -2,8 +2,10 @@ class SelectedShow extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      seasons: {}
+      seasons: {},
+      selectedSeason: 0
     }
+    this.selectSeason = this.selectSeason.bind(this)
   }
 
   componentDidMount(){
@@ -19,20 +21,31 @@ class SelectedShow extends React.Component {
       })
     }).then(r => r.json())
       .then(seasons => {
+        const seasonNums = Object.keys(seasons)
         this.setState({
-          seasons: seasons
+          seasons: seasons,
+          selectedSeason: seasonNums[seasonNums.length - 1]
         })
       })
+  }
+
+  selectSeason(e){
+    console.log(e.target.value);
+    this.setState({
+      selectedSeason: e.target.value
+    })
   }
 
 
   render(){
     console.log(this.state);
     const { seriesName, image_url } = this.props.selectedShow.tvdb_content
+    const seasons = Object.keys(this.state.seasons)
     return (
       <div id="selected-show">
         <h1>{seriesName}</h1>
         <img src={image_url} alt={seriesName} />
+        {seasons.length > 0 && <SeasonPicker seasons={Object.keys(this.state.seasons)} selectedSeason={this.state.selectedSeason} selectSeason={this.selectSeason} />}
       </div>
     )
   }
