@@ -46,6 +46,7 @@ class SelectedShow extends React.Component {
         <h1>{seriesName}</h1>
         <img src={image_url} alt={seriesName} />
         {seasons.length > 0 && <SeasonPicker seasons={Object.keys(this.state.seasons)} selectedSeason={this.state.selectedSeason} selectSeason={this.selectSeason} />}
+        {this.state.seasons[this.state.selectedSeason] && <EpisodesList episodes={this.state.seasons[this.state.selectedSeason]} />}
       </div>
     )
   }
