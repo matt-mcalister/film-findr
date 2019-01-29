@@ -31,7 +31,7 @@ class Api::V1::FilmsController < ApplicationController
     term = params[:search_term]
 
     plex_results = PlexAPI::Query.new(term, :tv).search || []
-    omdb_results = OMDBQuery.new(term).search
+    omdb_results = OMDBQuery.new(term: term).search
 
     omdb_results.reject! do |show|
       plex_results.any? do |s|

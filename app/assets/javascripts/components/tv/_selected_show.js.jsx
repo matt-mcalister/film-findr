@@ -1,4 +1,11 @@
 class SelectedShow extends React.Component {
+  constructor(props){
+    super(props)
+
+    this.state = {
+      seasonCount: 0
+    }
+  }
   render(){
     console.log(this.props);
     const { Title, Poster } = this.props.selectedShow.omdb_content
