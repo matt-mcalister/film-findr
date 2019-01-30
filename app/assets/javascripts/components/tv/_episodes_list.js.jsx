@@ -1,7 +1,7 @@
 const EpisodesList = ({ episodes }) => {
   console.log(episodes);
   return (
-    <div>
+    <div className="flex">
       {Object.keys(episodes).map(epNum => <EpisodeItem key={epNum} episode={episodes[epNum]} />)}
     </div>
   )

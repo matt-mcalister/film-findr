@@ -64,13 +64,14 @@ class TVDBQuery
       seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]] = episode
       seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]]["in_plex"] = !!(plex_seasons[episode["airedSeason"]] && plex_seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]])
     end
-    while r.parsed_response["links"]["next"]
+    while r.parsed_response && r.parsed_response["links"] && r.parsed_response["links"]["next"]
       r.parsed_response["data"].each do |episode|
         seasons[episode["airedSeason"]] ||= {}
         seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]] = episode
         seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]]["in_plex"] = !!(plex_seasons[episode["airedSeason"]] && plex_seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]])
       end
-      r = HTTParty.get(BASE_URL + "/search/series/#{tvdb_id}/episodes?page=#{r.parsed_response["links"]["next"]}", self.options)
+      nextPage = r.parsed_response["links"]["next"]
+      r = HTTParty.get(BASE_URL + "/series/#{tvdb_id}/episodes?page=#{nextPage}", self.options)
     end
     seasons
   end

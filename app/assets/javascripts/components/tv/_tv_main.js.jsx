@@ -57,7 +57,6 @@ class TVMain extends React.Component {
   }
 
   render() {
-    console.log(this.state.selectedShow);
     return(
       <div>
         <h1>TV Findr</h1>
