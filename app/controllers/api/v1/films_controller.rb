@@ -6,7 +6,8 @@ class Api::V1::FilmsController < ApplicationController
 
     term = params[:search_term]
 
-    yts_response = nil
+    yts_response = HTTParty.get("https://yts.am/api/v2/list_movies.json?quality=1080p&limit=50&query_term=#{term}")
+    # yts_response = nil
     plex_results = PlexAPI::Query.new(term, :film).search || []
     yts_results = []
 
