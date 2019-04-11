@@ -29,6 +29,13 @@ class TVDBQuery
       })
       if r.parsed_response["token"]
         @@token = r.parsed_response["token"]
+      else
+        @counter ||= 0
+        if @counter < 5
+          @counter += 1
+          puts "trying again: #{@counter}"
+          self.assign_token
+        end
       end
   end
 
