@@ -46,22 +46,24 @@ module PlexAPI
   class Query
 
     attr_accessor :response, :results
-    attr_reader :search, :formatted_search, :type
+    attr_reader :search, :formatted_search, :type, :subtype
 
     def initialize(search, type)
       @search = search
       @formatted_search = search.gsub(" ", "%20")
       case type
       when :tv
-        @type = 2
+        @type = 4
+        @subtype = 2
       when :film
-        @type = 1
+        @type = 3
+        @subtype = 1
       end
       self
     end
 
     def search
-      self.response = HTTParty.get("#{PlexAPI.base_url}/library/sections/#{self.type}/search?type=#{self.type}&query=#{self.formatted_search}", PlexAPI.options)
+      self.response = HTTParty.get("#{PlexAPI.base_url}/library/sections/#{self.type}/search?type=#{self.subtype}&query=#{self.formatted_search}", PlexAPI.options)
       if self.response.parsed_response["Response"] == "False"
         self.results = []
       else
