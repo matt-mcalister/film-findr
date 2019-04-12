@@ -1,10 +1,11 @@
 class EZTVQuery
-  attr_accessor :imdb_id, :episodes
+  attr_accessor :imdb_id, :episodes, :formatted_episodes
   # attr_reader :title, :formatted_title
 
   def initialize(imdb_id)
     @imdb_id = imdb_id
     @episodes = []
+    @formatted_episodes = {}
   end
   #
   # def get_imdb_id
@@ -43,6 +44,29 @@ class EZTVQuery
     #   "date_released_unix"=>1526103345,
     #   "size_bytes"=>"1188769570"
     # }
+  end
+
+  def filter_episodes
+    self.episodes.each do |ep|
+      self.formatted_episodes[ep["season"]] ||= {}
+      self.formatted_episodes[ep["season"]][ep["episode"]] ||= []
+      self.formatted_episodes[ep["season"]][ep["episode"]] << ep
+    end
+
+    self.formatted_episodes.keys.each do |season|
+      self.formatted_episodes[season].keys.each do |episode|
+        self.formatted_episodes[season][episode].reject! {|ep| ep["title"].include?("480p")}
+        self.formatted_episodes[season][episode] = self.formatted_episodes[season][episode].max_by {|ep| ep["seeds"] + ep["peers"]}
+      end
+    end
+
+    self.formatted_episodes
+  end
+
+  def self.get_torrents_by_id(id)
+    q = self.new(id)
+    q.find_episodes
+    q.filter_episodes
   end
 
 end
