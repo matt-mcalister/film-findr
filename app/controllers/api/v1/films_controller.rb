@@ -57,7 +57,8 @@ class Api::V1::FilmsController < ApplicationController
 
   def get_seasons
     seasons = TVDBQuery.get_seasons(tvdb_id: params[:tvdb_id], plex_id: params[:plex_id])
-    render json: seasons
+    imdbId = TVDBQuery.get_imdb_id(params[:tvdb_id])
+    render json: {seasons: seasons, imdbId: imdbId}
   end
 
   def thumbnail
