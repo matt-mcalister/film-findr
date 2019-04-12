@@ -83,6 +83,14 @@ class TVDBQuery
     seasons
   end
 
+  def self.get_show_by_id(tvdb_id)
+    if self.token == ""
+      self.assign_token
+    end
+    r = HTTParty.get(BASE_URL + "/series/#{tvdb_id}", self.options)
+    r.parsed_response["data"]
+  end
+
 
 
 end
