@@ -91,6 +91,11 @@ class TVDBQuery
     r.parsed_response["data"]
   end
 
+  def self.get_imdb_id(tvdb_id)
+    r = self.get_show_by_id(tvdb_id)
+    r && r["imdbId"].gsub("tt","").to_i
+  end
+
 
 
 end
