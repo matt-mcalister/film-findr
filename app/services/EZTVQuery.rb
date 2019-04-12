@@ -1,28 +1,29 @@
-class TVQuery
+class EZTVQuery
   attr_accessor :imdb_id, :episodes
-  attr_reader :title, :formatted_title
+  # attr_reader :title, :formatted_title
 
-  def initialize(title)
-    @title = title
-    @formatted_title = title.gsub(" ", "%20")
+  def initialize(imdb_id)
+    @imdb_id = imdb_id
     @episodes = []
   end
-
-  def get_imdb_id
-    r = HTTParty.get("http://www.omdbapi.com/?type=series&t=#{formatted_title}&apikey=#{ENV["OMDB_API_KEY"]}")
-    self.imdb_id = r.parsed_response["imdbID"].gsub("tt", "").to_i
-  end
+  #
+  # def get_imdb_id
+  #   r = HTTParty.get("http://www.omdbapi.com/?type=series&t=#{formatted_title}&apikey=#{ENV["OMDB_API_KEY"]}")
+  #   self.imdb_id = r.parsed_response["imdbID"].gsub("tt", "").to_i
+  # end
 
   def find_episodes
     counter = 1
-    url = "https://eztv.io/api/get-torrents?imdb_id=#{self.imdb_id || self.get_imdb_id}&page=#{counter}"
+    url = "https://eztv.io/api/get-torrents?imdb_id=#{self.imdb_id}&page=#{counter}"
     res = HTTParty.get(url)
+
     while self.episodes.length < res.parsed_response["torrents_count"].to_i
       self.episodes << res.parsed_response["torrents"]
       self.episodes = self.episodes.flatten
       counter += 1
-      res = HTTParty.get("https://eztv.io/api/get-torrents?imdb_id=#{self.imdb_id || self.get_imdb_id}&page=#{counter}")
+      res = HTTParty.get("https://eztv.io/api/get-torrents?imdb_id=#{self.imdb_id}&page=#{counter}")
     end
+    self.episodes
     # each episode:
     # {
     #   "id"=>819872,
