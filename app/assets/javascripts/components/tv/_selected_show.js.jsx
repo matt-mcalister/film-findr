@@ -31,7 +31,6 @@ class SelectedShow extends React.Component {
   }
 
   selectSeason(e){
-    console.log(e.target.value);
     this.setState({
       selectedSeason: e.target.value
     })
@@ -47,7 +46,6 @@ class SelectedShow extends React.Component {
 
 
   render(){
-    console.log(this.state);
     const { seriesName, image_url } = this.props.selectedShow.tvdb_content
     const seasons = Object.keys(this.state.seasons)
     return (

@@ -30,7 +30,6 @@ class FilmMain extends React.Component {
       })
     }).then(res => res.json())
       .then((json) => {
-        console.log(json)
         if (json.results_found) {
           const ytsResults = json.yts.results || []
           const plexResults = json.plex.results || []
