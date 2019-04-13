@@ -63,8 +63,8 @@ class EZTVQuery
     self.formatted_episodes
   end
 
-  def self.get_torrents_by_id(id)
-    q = self.new(id)
+  def self.get_torrents_by_id(imdbid)
+    q = self.new(imdbid)
     q.find_episodes
     q.filter_episodes
   end
