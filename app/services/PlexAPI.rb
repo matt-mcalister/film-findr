@@ -43,6 +43,18 @@ module PlexAPI
     seasons
   end
 
+  def self.get_seasons_with_torrents(tvdb_id:, plex_id:)
+    plex_seasons = TVDBQuery.get_seasons(tvdb_id: tvdb_id, plex_id: plex_id)
+    imdbId = TVDBQuery.get_imdb_id(tvdb_id)
+    torrent_seasons = EZTVQuery.get_torrents_by_id(imdbId)
+    torrent_seasons.keys.each do |season| # season is a string
+      torrent_seasons[season].keys.each do |episode| # episode is a string
+        plex_seasons[season.to_i][episode.to_i]["torrent_info"] = torrent_seasons[season][episode]
+      end
+    end
+    plex_seasons
+  end
+
   class Query
 
     attr_accessor :response, :results
