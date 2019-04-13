@@ -3,8 +3,7 @@ class SelectedShow extends React.Component {
     super(props)
     this.state = {
       seasons: {},
-      selectedSeason: 0,
-      imdbId: null
+      selectedSeason: 0
     }
     this.selectSeason = this.selectSeason.bind(this)
     this.addToPlex = this.addToPlex.bind(this)
@@ -22,12 +21,11 @@ class SelectedShow extends React.Component {
         plex_id: plex_id
       })
     }).then(r => r.json())
-      .then(({seasons, imdbId}) => {
+      .then(seasons => {
         const seasonNums = Object.keys(seasons)
         this.setState({
           seasons: seasons,
-          selectedSeason: seasonNums[seasonNums.length - 1],
-          imdbId: imdbId
+          selectedSeason: seasonNums[seasonNums.length - 1]
         })
       })
   }
@@ -39,7 +37,7 @@ class SelectedShow extends React.Component {
   }
 
   addToPlex(episode){
-    console.log(this.state.imdbId);
+    console.log(episode);
     // const seasons = {...this.state.seasons}
     // seasons[this.state.selectedSeason][episode].in_plex = true
     // this.setState({
@@ -56,7 +54,7 @@ class SelectedShow extends React.Component {
         <h1>{seriesName}</h1>
         <img src={image_url} alt={seriesName} />
         {seasons.length > 0 && <SeasonPicker seasons={Object.keys(this.state.seasons)} selectedSeason={this.state.selectedSeason} selectSeason={this.selectSeason} />}
-        {this.state.imdbId && this.state.seasons[this.state.selectedSeason] && <EpisodesList episodes={this.state.seasons[this.state.selectedSeason]} addToPlex={this.addToPlex}/>}
+        {this.state.seasons[this.state.selectedSeason] && <EpisodesList episodes={this.state.seasons[this.state.selectedSeason]} addToPlex={this.addToPlex}/>}
       </div>
     )
   }
