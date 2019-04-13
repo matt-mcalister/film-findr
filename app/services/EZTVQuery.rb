@@ -48,9 +48,15 @@ class EZTVQuery
 
   def filter_episodes
     self.episodes.each do |ep|
-      self.formatted_episodes[ep["season"]] ||= {}
-      self.formatted_episodes[ep["season"]][ep["episode"]] ||= []
-      self.formatted_episodes[ep["season"]][ep["episode"]] << ep
+      if ep["season"] == "0" && ep["episode"] == "0"
+        season, episode = ep["title"].scan(/S(\d+)+|E(\d+)+/).map {|arr| arr.compact.first.to_i.to_s}
+      else
+        season = ep["season"]
+        episode = ep["episode"]
+      end
+        self.formatted_episodes[season] ||= {}
+        self.formatted_episodes[season][episode] ||= []
+        self.formatted_episodes[season][episode] << ep
     end
 
     self.formatted_episodes.keys.each do |season|
