@@ -66,6 +66,7 @@ class Api::V1::FilmsController < ApplicationController
   end
 
   def download
-    `open magnet:?xt=urn:btih:#{params[:hash]}&dn=#{params[:slug]}&tr=udp://tracker.openbittorrent.com:80`
+    QBitAPI.add_torrent(torrent_hash: params[:torrent_hash], type: params[:type], magnet_url: params[:magnet_url], season: params[:season], episode: params[:episode], show_title: params[:show_title])
   end
+  
 end
