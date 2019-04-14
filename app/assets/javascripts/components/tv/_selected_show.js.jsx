@@ -37,12 +37,26 @@ class SelectedShow extends React.Component {
   }
 
   addToPlex(episode){
-    console.log(episode);
-    // const seasons = {...this.state.seasons}
-    // seasons[this.state.selectedSeason][episode].in_plex = true
-    // this.setState({
-    //   seasons: seasons
-    // })
+    // torrent_hash:, type:, magnet_url:, season: nil, episode: nil, show_title: nil
+    const seasons = {...this.state.seasons}
+    seasons[this.state.selectedSeason][episode.airedEpisodeNumber].in_plex = true
+    this.setState({
+      seasons: seasons
+    })
+    fetch("/api/v1/films/download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        torrent_hash: episode.torrent_info.hash,
+        type: "tv",
+        magnet_url: episode.torrent_info.magnet_url,
+        season: episode.airedSeason,
+        episode: episode.airedEpisodeNumber,
+        show_title: this.props.selectedShow.tvdb_content.slug
+      })
+    })
   }
 
 
