@@ -49,7 +49,9 @@ module PlexAPI
     torrent_seasons = EZTVQuery.get_torrents_by_id(imdbId)
     torrent_seasons.keys.each do |season| # season is a string
       torrent_seasons[season].keys.each do |episode| # episode is a string
-        plex_seasons[season.to_i][episode.to_i]["torrent_info"] = torrent_seasons[season][episode]
+        if !plex_seasons[season.to_i].nil? && !plex_seasons[season.to_i][episode.to_i].nil?
+          plex_seasons[season.to_i][episode.to_i]["torrent_info"] = torrent_seasons[season][episode]
+        end
       end
     end
     plex_seasons
