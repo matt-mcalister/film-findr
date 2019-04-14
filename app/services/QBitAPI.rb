@@ -7,9 +7,9 @@ class QBitAPI
       # ~/Movies/Qbit/PlexPending/tv-shows/#{NAME OF SHOW}/#{SEASON NUMBER}
   def self.add_torrent(torrent_hash:, type:, magnet_url:, season: nil, episode: nil, show_title: nil)
     case type
-    when :film
+    when "film"
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/movies"
-    when :tv
+    when "tv"
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/tv-shows/#{show_title}/#{season}"
     end
 
