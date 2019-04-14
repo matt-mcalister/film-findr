@@ -93,7 +93,7 @@ class TVDBQuery
 
   def self.get_imdb_id(tvdb_id)
     r = self.get_show_by_id(tvdb_id)
-    r && r["imdbId"].gsub("tt","").to_i
+    r && r["imdbId"].gsub("tt","")
   end
 
 
