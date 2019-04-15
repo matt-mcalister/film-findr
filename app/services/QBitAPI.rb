@@ -22,6 +22,7 @@ module QBitAPI
 
   def self.find_torrent(torrent_hash)
     r = HTTParty.get(BASE_URL + "/properties?hash=#{torrent_hash}")
+    QBitAPI::Torrent.new(r.parsed_response)
   end
 
   # check status of current torrents
