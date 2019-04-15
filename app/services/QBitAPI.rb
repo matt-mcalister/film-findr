@@ -1,5 +1,6 @@
-class QBitAPI
+module QBitAPI
   BASE_URL = "http://localhost:8080/api/v2/torrents"
+  
   # add torrents
     #  must always check first to see if torrent is already present
     #  adds to appropriate file path:
@@ -32,5 +33,7 @@ class QBitAPI
     r = HTTParty.get("#{BASE_URL}/info")
     r.parsed_response
   end
+
+
 
 end
