@@ -19,6 +19,10 @@ class QBitAPI
 
   end
 
+  def self.find_torrent(torrent_hash)
+    r = HTTParty.get(BASE_URL + "/properties?hash=#{torrent_hash}")
+  end
+
   # check status of current torrents
     # if any torrent is done, move it to plex
     # if it's a tv show, check if the season folder is now empty and delete the season folder
