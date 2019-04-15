@@ -1,6 +1,6 @@
 module QBitAPI
   BASE_URL = "http://localhost:8080/api/v2/torrents"
-  
+
   # add torrents
     #  must always check first to see if torrent is already present
     #  adds to appropriate file path:
@@ -34,6 +34,50 @@ module QBitAPI
     r.parsed_response
   end
 
+  class Torrent
+    attr_accessor(:addition_date,
+        :comment,
+        :completion_date,
+        :created_by,
+        :creation_date,
+        :dl_limit,
+        :dl_speed,
+        :dl_speed_avg,
+        :eta,
+        :last_seen,
+        :nb_connections,
+        :nb_connections_limit,
+        :peers,
+        :peers_total,
+        :piece_size,
+        :pieces_have,
+        :pieces_num,
+        :reannounce,
+        :save_path,
+        :seeding_time,
+        :seeds,
+        :seeds_total,
+        :share_ratio,
+        :time_elapsed,
+        :total_downloaded,
+        :total_downloaded_session,
+        :total_size,
+        :total_uploaded,
+        :total_uploaded_session,
+        :total_wasted,
+        :up_limit,
+        :up_speed,
+        :up_speed_avg)
+
+    def initialize(torrent_info = {})
+      torrent_info.each do |key, value|
+        self.send(("#{key}="), value)
+      end
+      self
+    end
+
+
+  end
 
 
 end
