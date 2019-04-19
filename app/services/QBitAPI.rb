@@ -68,13 +68,48 @@ module QBitAPI
         :total_wasted,
         :up_limit,
         :up_speed,
-        :up_speed_avg)
+        :up_speed_avg,
+        :media_path)
 
     def initialize(torrent_info = {})
       torrent_info.each do |key, value|
         self.send(("#{key}="), value)
       end
+      if self.save_path.match("/tv-shows/")
+        @media_path = "TV\ Shows"
+      else
+        @media_path = "Movies"
+      end
       self
+    end
+
+
+    # puts "BEGINNING ADD"
+    # queue = Dir["/Users/MattMcAlister/Movies/Bit/auto-added/**/*.mp4"]
+    # destination_path = "/Volumes/plexserv/Movies"
+    # puts "EXECUTING"
+    # queue.each do |original_path|
+    #   puts "ORIGINAL PATH: #{original_path}"
+    #   file_name = original_path.split("/").last
+    #   puts "FILE NAME: #{file_name}"
+    #   new_path = "#{destination_path}/#{file_name}"
+    #   puts "NEW PATH: #{new_path}"
+    #   puts "MOVING"
+    #   FileUtils.mv(original_path, new_path)
+    #   puts "MOVED"
+    #   puts "*********************"
+    # end
+    # puts "ALL PATHS MOVED"
+
+    def move_to_plex
+      destination_path = "/Volumes/plexserv/#{self.media_path}"
+      original_path = self.save_path
+      puts "ORIGINAL PATH: #{original_path}"
+      file_name = original_path.split("/").last
+      puts "FILE NAME: #{file_name}"
+      new_path = "#{destination_path}/#{file_name}"
+      puts "NEW PATH: #{new_path}"
+        # FileUtils.mv(original_path, new_path)
     end
 
 
