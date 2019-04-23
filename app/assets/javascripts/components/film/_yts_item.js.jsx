@@ -6,9 +6,9 @@ const YTSItem = (props) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        hash: tor.hash,
-        slug: props.slug,
-        url: props.url
+        torrent_hash: tor.hash,
+        type: "film",
+        magnet_url: `magnet:?xt=urn:btih:${tor.hash}&dn=${props.slug}&tr=udp://tracker.openbittorrent.com:80`
       })
     })
   }
