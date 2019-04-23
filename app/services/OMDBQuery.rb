@@ -16,7 +16,7 @@ class OMDBQuery
         self.results = self.response.parsed_response["Search"]
       end
     else
-      "CANNOT SEARCH EMPTY STRING"
+      self.results = []
     end
   end
 
