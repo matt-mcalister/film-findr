@@ -1,16 +1,15 @@
 class OMDBQuery
-  attr_accessor :response, :results, :seasons
-  attr_reader :term, :formatted_term, :imdbID
+  attr_accessor :response, :results
+  attr_reader :term, :formatted_term
 
-  def initialize(term: "", imdbID: "")
+  def initialize(term: "")
     @term = term
     @formatted_term = term.gsub(" ", "%20")
-    @imdbID = imdbID
   end
 
   def search
     if self.term != ""
-      self.response = HTTParty.get("http://www.omdbapi.com/?type=series&s=#{formatted_term}&apikey=#{ENV["OMDB_API_KEY"]}")
+      self.response = HTTParty.get("http://www.omdbapi.com/?type=movie&s=#{formatted_term}&apikey=#{ENV["OMDB_API_KEY"]}")
       if self.response.parsed_response["Response"] == "False"
         self.results = []
       else
@@ -18,15 +17,6 @@ class OMDBQuery
       end
     else
       "CANNOT SEARCH EMPTY STRING"
-    end
-  end
-
-  def get_seasons
-    if self.imdbID != ""
-      self.seasons = {}
-      seasonCount = 1
-      self.response = HTTParty.get("http://www.omdbapi.com/?type=series&i=#{imdbID}&apikey=#{ENV["OMDB_API_KEY"]}&season=#{seasonCount}")
-      self.seasons[seasonCount] = self.response.parsed_response["Episodes"].map {|episode| {episode["Episode"].to_i => episode} }
     end
   end
 
