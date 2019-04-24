@@ -115,7 +115,9 @@ module QBitAPI
       puts "FILE NAME: #{file_name}"
       new_path = "#{destination_path}/#{self.save_path.split("/tv-shows/")[1]}#{file_name}"
       puts "NEW PATH: #{new_path}"
-        FileUtils.mv(original_path, new_path)
+      FileUtils.mv(original_path, new_path)
+      puts "MOVED"
+      delete_torrent
     end
 
     def self.all
