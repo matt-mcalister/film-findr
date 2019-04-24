@@ -36,40 +36,52 @@ module QBitAPI
   end
 
   class Torrent
-    attr_accessor(:addition_date,
-        :comment,
-        :completion_date,
-        :created_by,
-        :creation_date,
+
+      @@all = []
+      attr_accessor(:added_on,
+        :amount_left,
+        :auto_tmm,
+        :category,
+        :completed,
+        :completion_on,
         :dl_limit,
-        :dl_speed,
-        :dl_speed_avg,
+        :dlspeed,
+        :downloaded,
+        :downloaded_session,
         :eta,
-        :last_seen,
-        :nb_connections,
-        :nb_connections_limit,
-        :peers,
-        :peers_total,
-        :piece_size,
-        :pieces_have,
-        :pieces_num,
-        :reannounce,
+        :f_l_piece_prio,
+        :force_start,
+        :hash,
+        :last_activity,
+        :magnet_uri,
+        :max_ratio,
+        :max_seeding_time,
+        :name,
+        :num_complete,
+        :num_incomplete,
+        :num_leechs,
+        :num_seeds,
+        :priority,
+        :progress,
+        :ratio,
+        :ratio_limit,
         :save_path,
-        :seeding_time,
-        :seeds,
-        :seeds_total,
-        :share_ratio,
-        :time_elapsed,
-        :total_downloaded,
-        :total_downloaded_session,
+        :seeding_time_limit,
+        :seen_complete,
+        :seq_dl,
+        :size,
+        :state,
+        :super_seeding,
+        :tags,
+        :time_active,
         :total_size,
-        :total_uploaded,
-        :total_uploaded_session,
-        :total_wasted,
+        :tracker,
         :up_limit,
-        :up_speed,
-        :up_speed_avg,
-        :media_path)
+        :uploaded,
+        :uploaded_session,
+        :upspeed,
+        :media_path,
+        )
 
     def initialize(torrent_info = {})
       torrent_info.each do |key, value|
@@ -81,6 +93,11 @@ module QBitAPI
         @media_path = "Movies"
       end
       self
+    end
+
+    def file_to_move
+      r = HTTParty.get(BASE_URL + "/files?hash=#{hash}")
+      r.parsed_response.max_by {|tor| tor["size"]}
     end
 
 
@@ -103,13 +120,17 @@ module QBitAPI
 
     def move_to_plex
       destination_path = "/Volumes/plexserv/#{self.media_path}"
-      original_path = self.save_path
-      puts "ORIGINAL PATH: #{original_path}"
+      original_path = self.save_path + file_to_move["name"]
       file_name = original_path.split("/").last
+      puts "ORIGINAL PATH: #{original_path}"
       puts "FILE NAME: #{file_name}"
-      new_path = "#{destination_path}/#{file_name}"
+      new_path = "#{destination_path}/#{self.save_path.split("/tv-shows/")[1]}#{file_name}"
       puts "NEW PATH: #{new_path}"
-        # FileUtils.mv(original_path, new_path)
+        FileUtils.mv(original_path, new_path)
+    end
+
+    def self.all
+      @@all.empty? ? @@all = QBitAPI.get_torrents.map {|tor| Torrent.new(tor)} : @@all
     end
 
 
