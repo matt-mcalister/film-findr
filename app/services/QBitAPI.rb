@@ -101,22 +101,11 @@ module QBitAPI
     end
 
 
-    # puts "BEGINNING ADD"
-    # queue = Dir["/Users/MattMcAlister/Movies/Bit/auto-added/**/*.mp4"]
-    # destination_path = "/Volumes/plexserv/Movies"
-    # puts "EXECUTING"
-    # queue.each do |original_path|
-    #   puts "ORIGINAL PATH: #{original_path}"
-    #   file_name = original_path.split("/").last
-    #   puts "FILE NAME: #{file_name}"
-    #   new_path = "#{destination_path}/#{file_name}"
-    #   puts "NEW PATH: #{new_path}"
-    #   puts "MOVING"
-    #   FileUtils.mv(original_path, new_path)
-    #   puts "MOVED"
-    #   puts "*********************"
-    # end
-    # puts "ALL PATHS MOVED"
+    def delete_torrent
+      body = "hashes=#{hash}&deleteFiles=true"
+      HTTParty.post(BASE_URL + "/delete",{body: body})
+      puts "DELETED"
+    end
 
     def move_to_plex
       destination_path = "/Volumes/plexserv/#{self.media_path}"
