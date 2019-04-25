@@ -37,7 +37,6 @@ module QBitAPI
 
   class Torrent
 
-      @@all = []
       attr_accessor(:added_on,
         :amount_left,
         :auto_tmm,
@@ -121,9 +120,8 @@ module QBitAPI
     end
 
     def self.all
-      @@all.empty? ? @@all = QBitAPI.get_torrents.map {|tor| Torrent.new(tor)} : @@all
+      QBitAPI.get_torrents.map {|tor| Torrent.new(tor)}
     end
-
 
   end
 
