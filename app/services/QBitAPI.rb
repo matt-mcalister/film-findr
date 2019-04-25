@@ -123,6 +123,10 @@ module QBitAPI
       QBitAPI.get_torrents.map {|tor| Torrent.new(tor)}
     end
 
+    def self.ready_to_migrate
+      self.all.select {|tor| tor.amount_left == 0}
+    end
+
   end
 
 
