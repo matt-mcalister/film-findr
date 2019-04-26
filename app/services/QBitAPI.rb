@@ -127,7 +127,7 @@ module QBitAPI
       self.all.select {|tor| tor.amount_left == 0}
     end
 
-    def self.migrate_applicable_torrents
+    def self.migrate_completed_torrents
       self.ready_to_migrate.each(&:move_to_plex)
     end
 
