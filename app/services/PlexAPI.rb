@@ -73,15 +73,33 @@ module PlexAPI
         @type = 3
         @subtype = 1
       end
-      self
     end
 
     def search
       self.response = HTTParty.get("#{PlexAPI.base_url}/library/sections/#{self.type}/search?type=#{self.subtype}&query=#{self.formatted_search}", PlexAPI.options)
-      if self.response.parsed_response["Response"] == "False"
+      if self.response.parsed_response["Response"] == "False" || self.response.parsed_response["MediaContainer"]["Metadata"].nil?
         self.results = []
       else
         self.results = self.response.parsed_response["MediaContainer"]["Metadata"]
+      end
+    end
+
+    def search_with_torrents
+      self.search
+      if self.type == 4 #tv
+        self.torrents = TVDBQuery.search_by_name(self.term)
+        self.torrents.reject! do |show|
+          self.results.any? do |s|
+            if s["title"] == show["seriesName"] && s["year"] == show["firstAired"].to_i
+              s["tvdb_content"] = show
+            else
+              false
+            end
+          end
+        end
+      else
+        self.torrents = YtsAPI.search(self.term)
+        self.torrents.reject! {|movie| self.results.any? {|m| m["title"] == movie["title"] && m["year"] == movie["year"]} }
       end
     end
 
