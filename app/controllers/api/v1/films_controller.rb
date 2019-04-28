@@ -6,10 +6,6 @@ class Api::V1::FilmsController < ApplicationController
 
     term = params[:search_term]
 
-    # plex_results = PlexAPI::Query.new(term, :film).search || []
-    # yts_results = YtsAPI.search(term)
-    # yts_results.reject! {|movie| plex_results.any? {|m| m["title"] == movie["title"] && m["year"] == movie["year"]} }
-
     query = PlexAPI::Query.new(term, :film)
     query.search_with_torrents
 
@@ -28,24 +24,14 @@ class Api::V1::FilmsController < ApplicationController
 
     term = params[:search_term]
 
-    plex_results = PlexAPI::Query.new(term, :tv).search || []
-    tvdb_results = TVDBQuery.search_by_name(term)
+    query = PlexAPI::Query.new(term, :tv)
+    query.search_with_torrents
 
-    tvdb_results.reject! do |show|
-      plex_results.any? do |s|
-        if s["title"] == show["seriesName"] && s["year"] == show["firstAired"].to_i
-          s["tvdb_content"] = show
-        else
-          false
-        end
-      end
-    end
-
-    if plex_results || tvdb_results
+    if query.results || query.torrents
       render json: {
         results_found: true,
-        plex: { results: plex_results },
-        tvdb: { results: tvdb_results }
+        plex: { results: query.results },
+        tvdb: { results: query.torrents }
       }
     else
       render json: { results_found: false }
