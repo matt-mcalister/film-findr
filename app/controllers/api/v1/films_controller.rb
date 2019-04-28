@@ -6,17 +6,11 @@ class Api::V1::FilmsController < ApplicationController
 
     term = params[:search_term]
 
-    yts_response = HTTParty.get("https://yts.am/api/v2/list_movies.json?quality=1080p&limit=50&query_term=#{term}")
-    # yts_response = nil
     plex_results = PlexAPI::Query.new(term, :film).search || []
-    yts_results = []
+    yts_results = YtsAPI.search(term)
+    yts_results.reject! {|movie| plex_results.any? {|m| m["title"] == movie["title"] && m["year"] == movie["year"]} }
 
-    if yts_response && yts_response["data"]["movies"]
-      yts_results = yts_response["data"]["movies"].uniq
-      yts_results.reject! {|movie| plex_results.any? {|m| m["title"] == movie["title"] && m["year"] == movie["year"]} }
-    end
-
-    if plex_results || yts_response && yts_results
+    if plex_results || yts_results
       render json: {
         results_found: true,
         plex: { results: plex_results },
