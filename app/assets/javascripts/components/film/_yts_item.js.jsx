@@ -18,7 +18,7 @@ const YTSItem = (props) => {
         <h4>{props.title} ({props.year})</h4>
         <p>Download:</p>
         {props.torrents.map(tor => {
-          return <button key={tor.hash} onClick={e => download(tor)}>{tor.quality}</button>
+          return <button key={tor.hash} onClick={e => download(tor)}>{tor.type} - {tor.quality}</button>
         })}
       </div>
     )
