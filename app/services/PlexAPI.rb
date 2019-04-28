@@ -59,12 +59,12 @@ module PlexAPI
 
   class Query
 
-    attr_accessor :response, :results
-    attr_reader :search, :formatted_search, :type, :subtype
+    attr_accessor :response, :results, :torrents
+    attr_reader :term, :formatted_search, :type, :subtype
 
-    def initialize(search, type)
-      @search = search
-      @formatted_search = search.gsub(" ", "%20")
+    def initialize(term, type)
+      @term = term
+      @formatted_search = term.gsub(" ", "%20")
       case type
       when :tv
         @type = 4
