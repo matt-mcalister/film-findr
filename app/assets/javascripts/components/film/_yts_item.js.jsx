@@ -7,6 +7,8 @@ class YTSItem extends React.Component {
         searching: false,
       }
       this.findUHD = this.findUHD.bind(this)
+      this.download = this.download.bind(this)
+      this.uhdDownload = this.uhdDownload.bind(this)
   }
 
   findUHD(){
@@ -27,6 +29,21 @@ class YTSItem extends React.Component {
           searching: false,
           uhd_tor: json.torrent
         })
+    })
+  }
+
+  uhdDownload(){
+    let hash = this.state.uhd_tor.download.match(/.+(?=\&dn=)/)[0].replace("magnet:?xt=urn:btih:", "")
+    fetch("/api/v1/films/download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        torrent_hash: hash,
+        type: "film",
+        magnet_url: this.state.uhd_tor.download
+      })
     })
   }
 
@@ -60,7 +77,7 @@ class YTSItem extends React.Component {
         <button onClick={this.findUHD}>Check for 4K</button> :
         this.state.searching ? <p>Searching...</p> :
         !this.state.uhd_tor ? <p>No 4k Torrents Found</p> :
-        <button>4k Torrent</button>
+        <button onClick={this.uhdDownload}>Download 4k</button>
       }
       </div>
     )
