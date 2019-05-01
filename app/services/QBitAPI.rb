@@ -13,8 +13,23 @@ module QBitAPI
       if !@@rescued
         @@rescued = true
         self.open_qbit
-        sleep 0.5
+        sleep 1
         r = self.get(route)
+      end
+    end
+    @@rescued = false
+    r
+  end
+
+  def self.post(route, options = {})
+    begin
+      r = HTTParty.post(BASE_URL + route, options)
+    rescue Errno::ECONNREFUSED
+      if !@@rescued
+        @@rescued = true
+        self.open_qbit
+        sleep 1
+        r = self.post(route, options)
       end
     end
     @@rescued = false
@@ -36,7 +51,7 @@ module QBitAPI
 
     body = "hash=#{torrent_hash}&urls=#{magnet_url}&savepath=#{savepath}"
 
-    HTTParty.post(BASE_URL + "/add",{body: body})
+    self.post("/add",{body: body})
 
   end
 
@@ -115,14 +130,14 @@ module QBitAPI
     end
 
     def file_to_move
-      r = QBitAPI.get("/files?hash=#{hash}") 
+      r = QBitAPI.get("/files?hash=#{hash}")
       r.parsed_response.max_by {|tor| tor["size"]}
     end
 
 
     def delete_torrent
       body = "hashes=#{hash}&deleteFiles=true"
-      HTTParty.post(BASE_URL + "/delete",{body: body})
+      QBitAPI.post("/delete",{body: body})
       puts "DELETED"
     end
 
