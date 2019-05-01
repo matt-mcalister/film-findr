@@ -41,7 +41,7 @@ module QBitAPI
   end
 
   def self.find_torrent(torrent_hash)
-    r = HTTParty.get(BASE_URL + "/properties?hash=#{torrent_hash}")
+    r = self.get("/properties?hash=#{torrent_hash}")
     QBitAPI::Torrent.new(r.parsed_response)
   end
 
@@ -115,7 +115,7 @@ module QBitAPI
     end
 
     def file_to_move
-      r = HTTParty.get(BASE_URL + "/files?hash=#{hash}")
+      r = QBitAPI.get("/files?hash=#{hash}") 
       r.parsed_response.max_by {|tor| tor["size"]}
     end
 
