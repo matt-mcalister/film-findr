@@ -1,5 +1,8 @@
 module QBitAPI
   BASE_URL = "http://localhost:8080/api/v2/torrents"
+  def self.open_qbit
+    `open ~/../../Applications/qbittorrent.app/`
+  end
 
   # add torrents
     #  must always check first to see if torrent is already present
