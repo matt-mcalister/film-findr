@@ -1,7 +1,24 @@
 module QBitAPI
   BASE_URL = "http://localhost:8080/api/v2/torrents"
+  @@rescued = false
+
   def self.open_qbit
     `open ~/../../Applications/qbittorrent.app/`
+  end
+
+  def self.get(route)
+    begin
+      r = HTTParty.get(BASE_URL + route)
+    rescue Errno::ECONNREFUSED
+      if !@@rescued
+        @@rescued = true
+        self.open_qbit
+        sleep 0.5
+        r = self.get(route)
+      end
+    end
+    @@rescued = false
+    r
   end
 
   # add torrents
@@ -34,7 +51,7 @@ module QBitAPI
       # once the season folder has been deleted, if the show folder is empty then delete the show folder
 
   def self.get_torrents
-    r = HTTParty.get("#{BASE_URL}/info")
+    r = self.get("/info")
     r.parsed_response
   end
 
