@@ -23,6 +23,26 @@ module PlexAPI
     `open ~/../../Applications/Plex\\ Media\\ Server.app/`
   end
 
+
+    @@rescued = false
+    def self.get(route)
+      begin
+        r = HTTParty.get("#{self.base_url}#{route}", self.options)
+      rescue Errno::ECONNREFUSED
+        if !@@rescued
+          @@rescued = true
+          self.open_plex
+          puts "opened plex"
+          sleep 1
+
+          r = self.get(route)
+        end
+      end
+      @@rescued = false
+      r
+    end
+
+
   def self.image(thumb)
     HTTParty.get("#{@@base_url}#{thumb}", @@options)
   end
@@ -80,7 +100,7 @@ module PlexAPI
     end
 
     def search
-      self.response = HTTParty.get("#{PlexAPI.base_url}/library/sections/#{self.type}/search?type=#{self.subtype}&query=#{self.formatted_search}", PlexAPI.options)
+      self.response = PlexAPI.get("/library/sections/#{self.type}/search?type=#{self.subtype}&query=#{self.formatted_search}")
       if self.response.parsed_response["Response"] == "False" || self.response.parsed_response["MediaContainer"]["Metadata"].nil?
         self.results = []
       else
