@@ -19,6 +19,10 @@ module PlexAPI
     @@options
   end
 
+  def self.open_plex
+    `open ~/../../Applications/Plex\\ Media\\ Server.app/`
+  end
+
   def self.image(thumb)
     HTTParty.get("#{@@base_url}#{thumb}", @@options)
   end
