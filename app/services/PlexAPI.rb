@@ -44,7 +44,7 @@ module PlexAPI
 
 
   def self.image(thumb)
-    HTTParty.get("#{@@base_url}#{thumb}", @@options)
+    PlexAPI.get(thumb)
   end
 
   def self.get_seasons(id)
@@ -52,11 +52,11 @@ module PlexAPI
     if id.nil?
       return seasons
     end
-    r = HTTParty.get("#{@@base_url}/library/metadata/#{id}/children", @@options)
+    r = PlexAPI.get("/library/metadata/#{id}/children")
     if r && r.parsed_response["MediaContainer"]["Metadata"]
       r.parsed_response["MediaContainer"]["Metadata"].each do |season|
         seasons[season["index"]] ||= {}
-        season_r = HTTParty.get("#{@@base_url}#{season["key"]}", @@options)
+        season_r = PlexAPI.get(season["key"])
         if season_r && season_r.parsed_response["MediaContainer"]["Metadata"]
           season_r.parsed_response["MediaContainer"]["Metadata"].each do |episode|
             seasons[season["index"]][episode["index"]] = episode
