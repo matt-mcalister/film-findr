@@ -3,6 +3,8 @@ module QBitAPI
   @@rescued = false
 
   def self.open_qbit
+    self.open_vpn
+    sleep 1 
     `open ~/../../Applications/qbittorrent.app/`
   end
 
