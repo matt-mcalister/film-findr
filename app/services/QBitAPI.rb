@@ -6,6 +6,10 @@ module QBitAPI
     `open ~/../../Applications/qbittorrent.app/`
   end
 
+  def self.open_vpn
+    `open ~/../../Applications/NordVPN.app/`
+  end
+
   def self.get(route)
     begin
       r = HTTParty.get(BASE_URL + route)
