@@ -62,9 +62,6 @@ class YTSItem extends React.Component {
   }
 
   render() {
-    if (this.state.uhd_tor){
-      console.log(this.state.uhd_tor);
-    }
     return(
       <div className="item yts">
       <img src={this.props.medium_cover_image} alt={this.props.title} />
@@ -77,7 +74,7 @@ class YTSItem extends React.Component {
         <button onClick={this.findUHD}>Check for 4K</button> :
         this.state.searching ? <p>Searching...</p> :
         !this.state.uhd_tor ? <p>No 4k Torrents Found</p> :
-        <button onClick={this.uhdDownload}>Download 4k</button>
+        <button onClick={this.uhdDownload}>Download 4k ({(this.state.uhd_tor.size * 10**-9).toFixed(2)} GB)</button>
       }
       </div>
     )
