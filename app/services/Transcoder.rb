@@ -1,7 +1,7 @@
 class Transcoder
   attr_accessor :file_path, :file_name, :destination_path
   @@handbrake = HandBrake::CLI.new(:bin_path => "../../../HandBrakeCLI",:trace => true)
-
+  @@threads = []
   def initialize(origin: origin_file_path, destination: destination_path)
     @file_path = origin.gsub("~/", "../../../")
     @file_name = origin.split("/").last
@@ -14,6 +14,10 @@ class Transcoder
 
   def self.handbrake
     @@handbrake
+  end
+
+  def self.threads
+    @@threads
   end
 
   def transcode(from_extension: "mkv", to_extension: "m4v", preset: "Apple 1080p30 Surround")
