@@ -41,8 +41,8 @@ class YTSItem extends React.Component {
       },
       body: JSON.stringify({
         torrent_hash: hash,
-        type: "film",
-        magnet_url: this.state.uhd_tor.download
+        type: "uhd",
+        magnet_url: this.state.uhd_tor.download,
       })
     })
   }
