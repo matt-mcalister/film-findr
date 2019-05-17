@@ -123,6 +123,7 @@ module QBitAPI
         :uploaded_session,
         :upspeed,
         :media_path,
+        :external_drive
         )
 
     def initialize(torrent_info = {})
@@ -131,8 +132,13 @@ module QBitAPI
       end
       if self.save_path.match("/tv-shows/")
         @media_path = "TV\ Shows"
-      else
+        @external_drive = true
+      elsif self.save_path.match("/movies/")
         @media_path = "Movies"
+        @external_drive = true
+      elsif self.save_path.match("/uhd/")
+        @external_drive = false
+        @media_path = "plex-movies-temp"
       end
       self
     end
@@ -150,6 +156,7 @@ module QBitAPI
     end
 
     def move_to_plex
+      byebug
       destination_path = "/Volumes/plexserv/#{self.media_path}"
       original_path = self.save_path + file_to_move["name"]
       file_name = original_path.split("/").last
@@ -157,7 +164,7 @@ module QBitAPI
       puts "FILE NAME: #{file_name}"
       new_path = "#{destination_path}/#{self.save_path.split("/tv-shows/")[1]}#{file_name}"
       puts "NEW PATH: #{new_path}"
-      FileUtils.mv(original_path, new_path)
+      # FileUtils.mv(original_path, new_path)
       puts "MOVED"
       delete_torrent
     end
