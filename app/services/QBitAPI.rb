@@ -156,15 +156,18 @@ module QBitAPI
     end
 
     def move_to_plex
-      byebug
-      destination_path = "/Volumes/plexserv/#{self.media_path}"
+      if external_drive
+        destination_path = "/Volumes/plexserv/#{self.media_path}"
+      else
+        destination_path = "/Users/MattMcAlister/Movies/#{self.media_path}"
+      end
       original_path = self.save_path + file_to_move["name"]
       file_name = original_path.split("/").last
       puts "ORIGINAL PATH: #{original_path}"
       puts "FILE NAME: #{file_name}"
       new_path = "#{destination_path}/#{self.save_path.split("/tv-shows/")[1]}#{file_name}"
       puts "NEW PATH: #{new_path}"
-      # FileUtils.mv(original_path, new_path)
+      FileUtils.mv(original_path, new_path)
       puts "MOVED"
       delete_torrent
     end
