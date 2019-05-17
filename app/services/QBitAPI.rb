@@ -4,7 +4,7 @@ module QBitAPI
 
   def self.open_qbit
     self.open_vpn
-    sleep 1 
+    sleep 1
     `open ~/../../Applications/qbittorrent.app/`
   end
 
@@ -53,6 +53,8 @@ module QBitAPI
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/movies"
     when "tv"
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/tv-shows/#{show_title}/#{season}"
+    when "uhd"
+      savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/uhd"
     end
 
     body = "hash=#{torrent_hash}&urls=#{magnet_url}&savepath=#{savepath}"
