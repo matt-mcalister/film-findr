@@ -54,3 +54,11 @@ environment ENV.fetch("RAILS_ENV") { "development" }
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
+
+if Rails.env.development?
+  require 'ngrok/tunnel'
+  options = {   addr: ENV.fetch("PORT") { 3000 },
+                config: File.join(ENV['HOME'],'.ngrok2','ngrok.yml')
+            }
+  puts "[NGROK] tunneling at " + Ngrok::Tunnel.start(options)
+end
