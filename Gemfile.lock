@@ -110,6 +110,7 @@ GEM
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
+    ngrok-tunnel (2.1.1)
     nio4r (2.3.1)
     nokogiri (1.10.1)
       mini_portile2 (~> 2.4.0)
@@ -226,6 +227,7 @@ DEPENDENCIES
   i18n (~> 1.5.3)
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
+  ngrok-tunnel
   puma (~> 3.7)
   rails (~> 5.1.6)
   rarbg (~> 1.3)
