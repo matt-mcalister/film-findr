@@ -65,21 +65,26 @@ class TVDBQuery
       self.assign_token
     end
     seasons = {}
+    threads = []
     r = HTTParty.get(BASE_URL + "/series/#{tvdb_id}/episodes", self.options)
     r.parsed_response["data"].each do |episode|
       seasons[episode["airedSeason"]] ||= {}
       seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]] = episode
       seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]]["in_plex"] = !!(plex_seasons[episode["airedSeason"]] && plex_seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]])
     end
-    while r.parsed_response && r.parsed_response["links"] && r.parsed_response["links"]["next"]
-      r.parsed_response["data"].each do |episode|
-        seasons[episode["airedSeason"]] ||= {}
-        seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]] = episode
-        seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]]["in_plex"] = !!(plex_seasons[episode["airedSeason"]] && plex_seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]])
-      end
-      nextPage = r.parsed_response["links"]["next"]
-      r = HTTParty.get(BASE_URL + "/series/#{tvdb_id}/episodes?page=#{nextPage}", self.options)
+    next_page = r.parsed_response["links"]["next"]
+    last_page = r.parsed_response["links"]["last"]
+    (next_page..last_page).each do |page|
+      threads << Thread.new {
+        r = HTTParty.get(BASE_URL + "/series/#{tvdb_id}/episodes?page=#{page}", self.options)
+        r.parsed_response["data"].each do |episode|
+          seasons[episode["airedSeason"]] ||= {}
+          seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]] = episode
+          seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]]["in_plex"] = !!(plex_seasons[episode["airedSeason"]] && plex_seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]])
+        end
+      }
     end
+    threads.map(&:join)
     seasons
   end
 
