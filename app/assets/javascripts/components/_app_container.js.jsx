@@ -2,7 +2,7 @@ class AppContainer extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      mediaType: "film"
+      mediaType: props.mediaType
     }
     this.handleChange = this.handleChange.bind(this)
   }
