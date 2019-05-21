@@ -51,7 +51,6 @@ class FilmMain extends React.Component {
   render() {
     return(
       <div>
-        <h1>Film Findr</h1>
         <SearchBar searchTerm={this.state.searchTerm} handleChange={this.handleChange} handleSubmit={this.handleSubmit}/>
         { this.state.searchMade && !this.state.results_found && <h2>Not Found, try refining your search</h2>}
         { this.state.results_found && <Results source="plex" results={this.state.plexResults} />}

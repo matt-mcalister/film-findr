@@ -59,7 +59,6 @@ class TVMain extends React.Component {
   render() {
     return(
       <div>
-        <h1>TV Findr</h1>
         {!this.state.selectedShow ? (
           <React.Fragment>
             <SearchBar searchTerm={this.state.searchTerm} handleChange={this.handleChange} handleSubmit={this.handleSubmit}/>
