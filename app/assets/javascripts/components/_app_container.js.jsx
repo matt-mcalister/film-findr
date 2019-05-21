@@ -8,8 +8,6 @@ class AppContainer extends React.Component {
   }
 
   handleChange(e){
-    console.log(e.target.value);
-    console.log(e.target.selectedValue);
     this.setState({
       mediaType: e.target.value
     })
