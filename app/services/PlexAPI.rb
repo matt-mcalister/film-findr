@@ -24,23 +24,23 @@ module PlexAPI
   end
 
 
-    @@rescued = false
-    def self.get(route)
-      begin
-        r = HTTParty.get("#{self.base_url}#{route}", self.options)
-      rescue Errno::ECONNREFUSED
-        if !@@rescued
-          @@rescued = true
-          self.open_plex
-          puts "opened plex"
-          sleep 1
+  @@rescued = false
+  def self.get(route)
+    begin
+      r = HTTParty.get("#{self.base_url}#{route}", self.options)
+    rescue Errno::ECONNREFUSED
+      if !@@rescued
+        @@rescued = true
+        self.open_plex
+        puts "opened plex"
+        sleep 1
 
-          r = self.get(route)
-        end
+        r = self.get(route)
       end
-      @@rescued = false
-      r
     end
+    @@rescued = false
+    r
+  end
 
 
   def self.image(thumb)
