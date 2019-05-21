@@ -19,12 +19,18 @@ class EZTVQuery
     QBitAPI.open_vpn
     sleep(1)
     res = HTTParty.get(url)
-
-    while self.episodes.length < res.parsed_response["torrents_count"].to_i
-      self.episodes << res.parsed_response["torrents"]
-      self.episodes = self.episodes.flatten
-      counter += 1
-      res = HTTParty.get("https://eztv.io/api/get-torrents?imdb_id=#{self.imdb_id}&page=#{counter}")
+    thread_pool = ThreadPool.new(100)
+    until self.episodes.length >= res.parsed_response["torrents_count"].to_i || counter == 100
+      thread_pool.schedule do
+        counter += 1
+        begin
+          res = HTTParty.get("https://eztv.io/api/get-torrents?imdb_id=#{self.imdb_id}&page=#{counter}")
+          self.episodes << res.parsed_response["torrents"]
+          self.episodes = self.episodes.flatten
+        rescue
+          puts "nope: #{counter}"
+        end
+      end
     end
     self.episodes
     # each episode:
