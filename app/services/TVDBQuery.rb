@@ -74,15 +74,17 @@ class TVDBQuery
     end
     next_page = r.parsed_response["links"]["next"]
     last_page = r.parsed_response["links"]["last"]
-    (next_page..last_page).each do |page|
-      threads << Thread.new {
-        r = HTTParty.get(BASE_URL + "/series/#{tvdb_id}/episodes?page=#{page}", self.options)
-        r.parsed_response["data"].each do |episode|
-          seasons[episode["airedSeason"]] ||= {}
-          seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]] = episode
-          seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]]["in_plex"] = !!(plex_seasons[episode["airedSeason"]] && plex_seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]])
-        end
-      }
+    unless next_page.nil?
+      (next_page..last_page).each do |page|
+        threads << Thread.new {
+          r = HTTParty.get(BASE_URL + "/series/#{tvdb_id}/episodes?page=#{page}", self.options)
+          r.parsed_response["data"].each do |episode|
+            seasons[episode["airedSeason"]] ||= {}
+            seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]] = episode
+            seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]]["in_plex"] = !!(plex_seasons[episode["airedSeason"]] && plex_seasons[episode["airedSeason"]][episode["airedEpisodeNumber"]])
+          end
+        }
+      end
     end
     threads.map(&:join)
     seasons
