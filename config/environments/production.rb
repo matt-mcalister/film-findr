@@ -88,4 +88,7 @@ config.webpacker.check_yarn_integrity = false
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
+
+  # Do not dump schema after migrations.
+  config.active_record.dump_schema_after_migration = false
 end
