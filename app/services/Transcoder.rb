@@ -1,5 +1,5 @@
 class Transcoder
-  attr_accessor :file_path, :file_name, :destination_path
+  attr_accessor :file_path, :file_name, :destination_path, :new_file_path
   @@handbrake = HandBrake::CLI.new(:bin_path => "../../../HandBrakeCLI",:trace => true)
   @@threads = []
   def initialize(origin: origin_file_path, destination: destination_path)
@@ -21,7 +21,7 @@ class Transcoder
   end
 
   def transcode(from_extension: "mkv", to_extension: "m4v", preset: "Apple 1080p30 Surround")
-    new_file_path = destination_path + file_name.gsub(from_extension,to_extension)
+    @new_file_path = destination_path + file_name.gsub(from_extension,to_extension)
     self.class.handbrake.input(file_path).preset(preset).output(new_file_path)
   end
 
@@ -32,6 +32,23 @@ class Transcoder
         transcoder.transcode(from_extension: from_extension, to_extension: to_extension, preset: preset)
         puts "Job #{transcoder.file_name}, finished by thread #{Thread.current[:id]}"
       end
+    end
+  end
+
+  def self.move_shows_to_plex
+    Dir["/Users/MattMcAlister/Movies/HandBroken/TV\ Shows/**/**/*.m4v"].each do |original_path|
+      destination_path = original_path.gsub("/Users/MattMcAlister/Movies/HandBroken/TV\ Shows/", "/Volumes/plexserv/TV\ Shows/")
+      puts "ORIGINAL PATH: #{original_path}"
+      puts "DESTINATION PATH: #{destination_path}"
+      begin
+        FileUtils.mv(original_path, destination_path)
+      rescue Errno::ENOENT => e
+        FileUtils.makedirs("/Volumes/plexserv/TV\ Shows/" + original_path.split("TV Shows/").last.split("/")[0..1].join("/"))
+        puts "new folder made"
+        FileUtils.mv(original_path, destination_path)
+      end
+      puts "MOVED"
+      puts "*******"
     end
   end
 end
