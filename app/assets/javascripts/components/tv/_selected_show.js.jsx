@@ -7,6 +7,7 @@ class SelectedShow extends React.Component {
     }
     this.selectSeason = this.selectSeason.bind(this)
     this.addToPlex = this.addToPlex.bind(this)
+    this.downloadFullSeason = this.downloadFullSeason.bind(this)
   }
 
   componentDidMount(){
@@ -37,6 +38,8 @@ class SelectedShow extends React.Component {
   }
 
   addToPlex(episode){
+    console.log("EPISODE: ", episode);
+    console.log("SHOW: ", this.props.selectedShow);
     // torrent_hash:, type:, magnet_url:, season: nil, episode: nil, show_title: nil
     const seasons = {...this.state.seasons}
     seasons[this.state.selectedSeason][episode.airedEpisodeNumber].in_plex = true
@@ -54,9 +57,15 @@ class SelectedShow extends React.Component {
         magnet_url: episode.torrent_info.magnet_url,
         season: episode.airedSeason,
         episode: episode.airedEpisodeNumber,
-        show_title: this.props.selectedShow.tvdb_content.slug
+        show_title: this.props.selectedShow.tvdb_content.slug,
+        isLocal: false,
       })
     })
+  }
+
+  downloadFullSeason(){
+    console.log("DOWNLOAD FULL SEASON!!!!!!!");
+    console.log(this.state.seasons[this.state.selectedSeason]["full_season"]);
   }
 
 
@@ -68,6 +77,7 @@ class SelectedShow extends React.Component {
         <h1>{seriesName}</h1>
         <img src={image_url} alt={seriesName} />
         {seasons.length > 0 && <SeasonPicker seasons={Object.keys(this.state.seasons)} selectedSeason={this.state.selectedSeason} selectSeason={this.selectSeason} />}
+        {seasons.length > 0 && this.state.seasons[this.state.selectedSeason]["full_season"] && <button onClick={this.downloadFullSeason}>Full Season Download Available</button>}
         {this.state.seasons[this.state.selectedSeason] && <EpisodesList episodes={this.state.seasons[this.state.selectedSeason]} addToPlex={this.addToPlex}/>}
       </div>
     )
