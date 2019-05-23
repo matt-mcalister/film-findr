@@ -181,7 +181,12 @@ module QBitAPI
     end
 
     def self.migrate_completed_torrents
-      self.ready_to_migrate.each(&:move_to_plex)
+      thread_pool = ThreadPool.new(50)
+      self.ready_to_migrate.each do |tor|
+        thread_pool.schedule do
+          tor.move_to_plex
+        end
+      end
     end
 
   end
