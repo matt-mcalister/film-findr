@@ -20,6 +20,7 @@ class EZTVQuery
     sleep(1)
     res = HTTParty.get(url)
     thread_pool = ThreadPool.new(100)
+    self.episodes << res.parsed_response["torrents"]
     until self.episodes.length >= res.parsed_response["torrents_count"].to_i || counter == 100
       thread_pool.schedule do
         counter += 1
@@ -54,7 +55,6 @@ class EZTVQuery
         self.formatted_episodes[season][episode] = self.formatted_episodes[season][episode].max_by {|ep| ep["seeds"] + ep["peers"]}
       end
     end
-
     self.formatted_episodes
   end
 
