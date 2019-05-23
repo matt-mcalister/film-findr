@@ -51,6 +51,12 @@
   width: 230px;
 }
 
+#selected-show {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 #selected-show > img {
   height: 40vh;
   max-height: 600px;
