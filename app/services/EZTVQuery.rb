@@ -7,11 +7,6 @@ class EZTVQuery
     @episodes = []
     @formatted_episodes = {}
   end
-  #
-  # def get_imdb_id
-  #   r = HTTParty.get("http://www.omdbapi.com/?type=series&t=#{formatted_title}&apikey=#{ENV["OMDB_API_KEY"]}")
-  #   self.imdb_id = r.parsed_response["imdbID"].gsub("tt", "").to_i
-  # end
 
   def find_episodes
     counter = 1
