@@ -31,5 +31,17 @@ module Rarbg
 
   end
 
+  class Torrent
+    attr_reader :filename, :category, :magnet_url, :season, :episode
+
+    def initialize(tor_hash)
+      @filename = tor_hash["filename"]
+      @category = tor_hash["category"]
+      @magnet_url = tor_hash["download"]
+      @season, @episode = tor_hash["filename"].scan(/S(\d+)+|E(\d+)+/).map {|arr| arr.compact.first.to_i.to_s}
+    end
+
+  end
+
 
 end
