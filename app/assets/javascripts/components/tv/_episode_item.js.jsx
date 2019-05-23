@@ -1,5 +1,8 @@
 const EpisodeItem = ({ episode: { episodeName, filename, airedSeason, airedEpisodeNumber, in_plex, torrent_info }, addToPlex }) => {
     const image_url = filename ? ("https://www.thetvdb.com/banners/" + filename) : "https://bigriverequipment.com/wp-content/uploads/2017/10/no-photo-available.png"
+    if (!episodeName) {
+      return null
+    }
     return(
       <div className="item episode">
         <img src={image_url} alt={episodeName} />
