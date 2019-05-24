@@ -38,10 +38,7 @@ class SelectedShow extends React.Component {
   }
 
   addToPlex(episode){
-    console.log("EPISODE: ", episode);
-    console.log("SHOW: ", this.props.selectedShow);
     let torrent_hash = episode.torrent_info.magnet_url.match(/.+(?=\&dn=)/)[0].replace("magnet:?xt=urn:btih:", "")
-    console.log(torrent_hash);
     const seasons = {...this.state.seasons}
     seasons[this.state.selectedSeason][episode.airedEpisodeNumber].in_plex = true
     this.setState({
@@ -68,6 +65,24 @@ class SelectedShow extends React.Component {
   downloadFullSeason(){
     console.log("DOWNLOAD FULL SEASON!!!!!!!");
     console.log(this.state.seasons[this.state.selectedSeason]["full_season"]);
+    let torrent_info = this.state.seasons[this.state.selectedSeason]["full_season"].torrent_info
+    let torrent_hash = torrent_info.magnet_url.match(/.+(?=\&dn=)/)[0].replace("magnet:?xt=urn:btih:", "")
+    fetch("/api/v1/films/download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        torrent_hash: torrent_hash,
+        type: "tv - full season",
+        magnet_url: torrent_info.magnet_url,
+        season: this.state.selectedSeason,
+        episode: null,
+        show_slug: this.props.selectedShow.tvdb_content.slug,
+        title: this.props.selectedShow.tvdb_content.seriesName,
+        isLocal: false,
+      })
+    })
   }
 
 
