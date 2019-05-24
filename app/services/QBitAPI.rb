@@ -52,9 +52,8 @@ module QBitAPI
     when "film"
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/movies"
     when "tv"
-      savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/tv-shows/#{show_slug}/#{season}"
     when "tv - full season"
-      savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/tv-shows/#{show_slug}&rename=#{season}"
+      savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/tv-shows/#{show_slug}/#{season}"
     when "uhd"
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/uhd"
     end
