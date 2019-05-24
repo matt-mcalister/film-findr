@@ -47,12 +47,12 @@ module QBitAPI
     #  adds to appropriate file path:
       # ~/Movies/Qbit/PlexPending/movies
       # ~/Movies/Qbit/PlexPending/tv-shows/#{NAME OF SHOW}/#{SEASON NUMBER}
-  def self.add_torrent(torrent_hash:, type:, magnet_url:, season: nil, episode: nil, show_title: nil)
+  def self.add_torrent(torrent_hash:, type:, magnet_url:, title:, isLocal: false, season: nil, episode: nil, show_slug: nil)
     case type
     when "film"
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/movies"
     when "tv"
-      savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/tv-shows/#{show_title}/#{season}"
+      savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/tv-shows/#{show_slug}/#{season}"
     when "uhd"
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/uhd"
     end
@@ -60,7 +60,7 @@ module QBitAPI
     body = "hash=#{torrent_hash}&urls=#{magnet_url}&savepath=#{savepath}"
 
     self.post("/add",{body: body})
-
+    Download.create(torrent_hash: torrent_hash, title: title, isLocal: isLocal, mediaType: type, season: season, episode: episode)
   end
 
   def self.find_torrent(torrent_hash)
