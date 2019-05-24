@@ -63,16 +63,6 @@ module QBitAPI
     Download.create(torrent_hash: torrent_hash, title: title, isLocal: isLocal, mediaType: type, season: season, episode: episode)
   end
 
-  def self.find_torrent(torrent_hash)
-    r = self.get("/properties?hash=#{torrent_hash}")
-    QBitAPI::Torrent.new(r.parsed_response)
-  end
-
-  # check status of current torrents
-    # if any torrent is done, move it to plex
-    # if it's a tv show, check if the season folder is now empty and delete the season folder
-      # once the season folder has been deleted, if the show folder is empty then delete the show folder
-
   def self.get_torrents
     r = self.get("/info")
     r.parsed_response
@@ -174,6 +164,10 @@ module QBitAPI
 
     def self.all
       QBitAPI.get_torrents.map {|tor| Torrent.new(tor)}
+    end
+
+    def self.find_by_hash(hash)
+      self.all.find {|tor| tor.hash.downcase == hash.downcase}
     end
 
     def self.ready_to_migrate
