@@ -67,7 +67,15 @@ class Api::V1::FilmsController < ApplicationController
   end
 
   def download
-    QBitAPI.add_torrent(torrent_hash: params[:torrent_hash], type: params[:type], magnet_url: params[:magnet_url], season: params[:season], episode: params[:episode], show_title: params[:show_title])
+    QBitAPI.add_torrent(
+      torrent_hash: params[:torrent_hash],
+      type: params[:type],
+      magnet_url: params[:magnet_url],
+      season: params[:season],
+      episode: params[:episode],
+      show_slug: params[:show_slug],
+      isLocal: params[:isLocal],
+      title: params[:title])
   end
 
 end

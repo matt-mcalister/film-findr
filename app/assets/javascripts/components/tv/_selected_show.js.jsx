@@ -40,7 +40,8 @@ class SelectedShow extends React.Component {
   addToPlex(episode){
     console.log("EPISODE: ", episode);
     console.log("SHOW: ", this.props.selectedShow);
-    // torrent_hash:, type:, magnet_url:, season: nil, episode: nil, show_title: nil
+    let torrent_hash = episode.torrent_info.magnet_url.match(/.+(?=\&dn=)/)[0].replace("magnet:?xt=urn:btih:", "")
+    console.log(torrent_hash);
     const seasons = {...this.state.seasons}
     seasons[this.state.selectedSeason][episode.airedEpisodeNumber].in_plex = true
     this.setState({
@@ -52,12 +53,13 @@ class SelectedShow extends React.Component {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        torrent_hash: episode.torrent_info.hash,
+        torrent_hash: torrent_hash,
         type: "tv",
         magnet_url: episode.torrent_info.magnet_url,
         season: episode.airedSeason,
         episode: episode.airedEpisodeNumber,
-        show_title: this.props.selectedShow.tvdb_content.slug,
+        show_slug: this.props.selectedShow.tvdb_content.slug,
+        title: this.props.selectedShow.tvdb_content.seriesName,
         isLocal: false,
       })
     })

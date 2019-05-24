@@ -41,8 +41,10 @@ class YTSItem extends React.Component {
       },
       body: JSON.stringify({
         torrent_hash: hash,
+        title: this.props.title,
         type: "uhd",
         magnet_url: this.state.uhd_tor.download,
+        isLocal: true,
       })
     })
   }
@@ -54,6 +56,8 @@ class YTSItem extends React.Component {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
+        isLocal: false,
+        title: this.props.title,
         torrent_hash: tor.hash,
         type: "film",
         magnet_url: `magnet:?xt=urn:btih:${tor.hash}&dn=${this.props.slug}&tr=udp://tracker.openbittorrent.com:80`
