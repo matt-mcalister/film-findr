@@ -51,13 +51,12 @@ module QBitAPI
     case type
     when "film"
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/movies"
-    when "tv"
-    when "tv - full season"
+    when "tv", "tv - full season"
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/tv-shows/#{show_slug}/#{season}"
     when "uhd"
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/uhd"
     end
-
+    
     body = "hash=#{torrent_hash}&urls=#{magnet_url}&savepath=#{savepath}"
 
     self.post("/add",{body: body})
