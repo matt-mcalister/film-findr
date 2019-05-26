@@ -33,6 +33,7 @@ class Transcoder
         puts "Job #{transcoder.file_name}, finished by thread #{Thread.current[:id]}"
       end
     end
+    thread_pool.run!
   end
 
   def self.move_shows_to_plex
