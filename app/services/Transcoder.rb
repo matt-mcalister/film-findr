@@ -29,6 +29,10 @@ class Transcoder
     self.class.handbrake.input(file_path).preset(preset).output(new_file_path)
     puts "***********************"
     puts new_file_name + " SUCCESFFULLY CREATED"
+    self.move_to_plex
+  end
+
+  def move_to_plex
     puts "MOVING TO PLEX"
     plex_file_path = new_file_path.gsub("/Users/MattMcAlister/Movies/HandBroken/", "/Volumes/plexserv/")
     begin
@@ -36,10 +40,10 @@ class Transcoder
     rescue Errno::ENOENT => e
       FileUtils.makedirs(plex_file_path.split("/")[0...-1].join("/"))
       puts "new folder made"
-      FileUtils.mv(original_path, plex_file_path)
+      FileUtils.mv(new_file_path, plex_file_path)
     end
     puts "***********************"
-    puts "#{new_file_name} FILE SUCCESSFULLY MOVED"
+    puts "#{file_name} FILE SUCCESSFULLY MOVED"
     puts "***********************"
   end
 
