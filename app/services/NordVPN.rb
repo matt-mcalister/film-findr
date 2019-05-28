@@ -4,11 +4,11 @@ class NordVPN
     sleep 1
   end
 
-  def self.vpn_pid
+  def self.pid
     pid = `pgrep NordVPN`.to_i
     if pid == 0
       self.open
-      self.vpn_pid
+      self.pid
     else
       pid
     end
@@ -19,6 +19,7 @@ class NordVPN
   end
 
   def self.active?
+    self.pid # this line ensures that nordvpn is open
     f = File.open(NordVPN.most_recent_log_file)
     f.reverse_each do |log|
       if log.include?("Disconnected")
@@ -30,5 +31,9 @@ class NordVPN
       end
     end
   end
-  
+
+  def self.restart
+    `kill #{NordVPN.pid}`
+    self.open
+  end
 end
