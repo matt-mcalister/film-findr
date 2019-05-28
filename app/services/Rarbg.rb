@@ -22,8 +22,9 @@ module Rarbg
     end
 
     def find_episodes(season: nil, episode: nil)
-      QBitAPI.open_vpn
-      sleep(1)
+      if !NordVPN.active?
+        NordVPN.restart
+      end
       rarbg = RARBG::API.new
       season_episode_string = "#{season && 'S' + (season.to_s.length < 10 ? '0' + season.to_s : season.to_s)}#{episode && 'E' + (episode.to_s.length < 10 ? '0' + episode.to_s : episode.to_s)}"
       self.episodes = rarbg.search(imdb: "tt#{self.imdb_id}", category: [41], limit: 100, format: :json_extended, string: season_episode_string).map {|el| Rarbg::Download.new(el)}

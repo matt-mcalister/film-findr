@@ -3,7 +3,9 @@ module QBitAPI
   @@rescued = false
 
   def self.open_qbit
-    NordVPN.open 
+    if !NordVPN.active?
+      NordVPN.restart
+    end 
     `open ~/../../Applications/qbittorrent.app/`
   end
 

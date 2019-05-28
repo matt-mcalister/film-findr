@@ -11,8 +11,9 @@ class EZTVQuery
   def find_episodes
     counter = 1
     url = "https://eztv.io/api/get-torrents?imdb_id=#{self.imdb_id}&page=#{counter}"
-    QBitAPI.open_vpn
-    sleep(1)
+    if !NordVPN.active?
+      NordVPN.restart
+    end
     res = HTTParty.get(url)
     thread_pool = ThreadPool.new(100)
     self.episodes << res.parsed_response["torrents"]
