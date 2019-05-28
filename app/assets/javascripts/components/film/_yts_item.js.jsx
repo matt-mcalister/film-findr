@@ -66,12 +66,16 @@ class YTSItem extends React.Component {
   }
 
   render() {
+    console.log("***********");
+    console.log("PROPS: ", this.props);
+    console.log("STATE: ", this.state);
+    console.log("***********");
     return(
       <div className="item yts">
       <img src={this.props.medium_cover_image} alt={this.props.title} />
       <h4>{this.props.title} ({this.props.year})</h4>
       <p>Download:</p>
-      {this.props.torrents.map(tor => {
+      {this.props.torrents && this.props.torrents.map(tor => {
         return <button key={tor.hash} onClick={e => this.download(tor)}>{tor.type} - {tor.quality}</button>
       })}
       {!this.state.uhd_searched ?
