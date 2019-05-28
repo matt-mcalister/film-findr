@@ -12,6 +12,16 @@ module QBitAPI
     sleep 1
   end
 
+  def self.vpn_pid
+    pid = `pgrep NordVPN`.to_i
+    if pid == 0
+      self.open_vpn
+      self.vpn_pid
+    else
+      pid
+    end
+  end
+
   def self.get(route)
     begin
       r = HTTParty.get(BASE_URL + route)
