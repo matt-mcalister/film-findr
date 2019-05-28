@@ -4,12 +4,12 @@ module QBitAPI
 
   def self.open_qbit
     self.open_vpn
-    sleep 1
     `open ~/../../Applications/qbittorrent.app/`
   end
 
   def self.open_vpn
     `open ~/../../Applications/NordVPN.app/`
+    sleep 1
   end
 
   def self.get(route)
@@ -56,7 +56,7 @@ module QBitAPI
     when "uhd"
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/uhd"
     end
-    
+
     body = "hash=#{torrent_hash}&urls=#{magnet_url}&savepath=#{savepath}"
 
     self.post("/add",{body: body})
