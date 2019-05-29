@@ -20,7 +20,7 @@ class Transcoder
     @@threads
   end
 
-  def transcode(from_extension: "mkv", to_extension: "m4v", preset: "Apple 1080p30 Surround")
+  def transcode(from_extension: "mkv", to_extension: "mp4", preset: "Apple 1080p30 Surround")
     new_file_name = file_name.gsub(from_extension,to_extension)
     puts "***********************"
     puts "BEGINNING TRANSCODE FOR: #{new_file_name}"
@@ -47,7 +47,7 @@ class Transcoder
     puts "***********************"
   end
 
-  def self.transcode_from_folder(origin_folder:, destination_folder:, from_extension: "mkv", to_extension: "m4v", preset: "Apple 1080p30 Surround")
+  def self.transcode_from_folder(origin_folder:, destination_folder:, from_extension: "mkv", to_extension: "mp4", preset: "Apple 1080p30 Surround")
     thread_pool = ThreadPool.new(5)
     self.files_from_folder(origin_folder + "*.#{from_extension}", destination_folder).each do |transcoder|
       thread_pool.schedule do
