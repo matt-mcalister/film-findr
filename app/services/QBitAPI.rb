@@ -142,11 +142,11 @@ module QBitAPI
       puts "DELETED"
     end
 
-    def move_to_plex
-      if external_drive
+    def move_to_plex(isLocal: false)
+      if external_drive && !isLocal 
         destination_path = "/Volumes/plexserv/#{self.media_path}"
       else
-        destination_path = "/Users/MattMcAlister/Movies/#{self.media_path}"
+        destination_path = "/Users/MattMcAlister/Movies/plex-movies-temp"
       end
       original_path = self.save_path + file_to_move["name"]
       file_name = original_path.split("/").last
