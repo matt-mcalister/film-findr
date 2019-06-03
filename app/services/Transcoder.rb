@@ -57,24 +57,4 @@ class Transcoder
     end
     thread_pool.run!
   end
-
-  def self.move_shows_to_plex
-    thread_pool = ThreadPool.new(50)
-    Dir["/Users/MattMcAlister/Movies/HandBroken/TV\ Shows/**/**/*.m4v"].each do |original_path|
-      thread_pool.schedule do
-        destination_path = original_path.gsub("/Users/MattMcAlister/Movies/HandBroken/TV\ Shows/", "/Volumes/plexserv/TV\ Shows/")
-        puts "ORIGINAL PATH: #{original_path}"
-        puts "DESTINATION PATH: #{destination_path}"
-        begin
-          FileUtils.mv(original_path, destination_path)
-        rescue Errno::ENOENT => e
-          FileUtils.makedirs("/Volumes/plexserv/TV\ Shows/" + original_path.split("TV Shows/").last.split("/")[0..1].join("/"))
-          puts "new folder made"
-          FileUtils.mv(original_path, destination_path)
-        end
-        puts "MOVED"
-        puts "*******"
-      end
-    end
-  end
 end
