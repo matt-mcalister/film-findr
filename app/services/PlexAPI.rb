@@ -116,9 +116,10 @@ module PlexAPI
       if self.type == 4 #tv
         self.torrents = TVDBQuery.search_by_name(self.term)
         self.torrents.reject! do |show|
-          self.results.any? do |s|
-            if s["title"] == show["seriesName"] && s["year"] == show["firstAired"].to_i
-              s["tvdb_content"] = show
+          self.results.any? do |plex_s|
+            if plex_s["title"] == show["seriesName"] && plex_s["year"] == show["firstAired"].to_i
+              plex_s["tvdb_content"] = show
+              true
             else
               false
             end
