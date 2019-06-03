@@ -29,6 +29,7 @@ class EZTVQuery
         end
       end
     end
+    thread_pool.run!
     self.episodes
   end
 

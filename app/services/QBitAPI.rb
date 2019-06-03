@@ -5,7 +5,7 @@ module QBitAPI
   def self.open_qbit
     if !NordVPN.active?
       NordVPN.restart
-    end 
+    end
     `open ~/../../Applications/qbittorrent.app/`
   end
 
@@ -178,6 +178,7 @@ module QBitAPI
           tor.move_to_plex
         end
       end
+      thread_pool.run!
     end
 
   end
