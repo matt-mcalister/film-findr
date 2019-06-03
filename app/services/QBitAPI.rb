@@ -57,7 +57,7 @@ module QBitAPI
     body = "hash=#{torrent_hash}&urls=#{magnet_url}&savepath=#{savepath}"
 
     self.post("/add",{body: body})
-    Download.create(torrent_hash: torrent_hash, title: title, isLocal: isLocal, mediaType: type, season: season, episode: episode)
+    TorWatcher.new(torrent_hash: torrent_hash, type: type, title: title, qbit_path: savepath, isLocal: isLocal, season: season, episode: episode, show_slug: show_slug)
   end
 
   def self.get_torrents
