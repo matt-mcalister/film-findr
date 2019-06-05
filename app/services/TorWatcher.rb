@@ -52,7 +52,19 @@ class TorWatcher
       puts "NOT DONE, WILL CHECK IN #{delay}"
       sleep(delay)
     end
-    puts "TOR COMPLETE #{torrent_hash}"
+    puts "TOR DOWNLOAD COMPLETE #{torrent_hash}"
+    Thread.new { prepare_files_for_plex }
+  end
+
+  def prepare_files_for_plex
+
+    if type != "tv"
+      torrent.move_to_plex(isLocal: isLocal)
+    else
+      torrent.transcode
+    end
+
+
   end
 
 end
