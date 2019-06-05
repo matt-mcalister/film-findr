@@ -142,8 +142,13 @@ module QBitAPI
       puts "DELETED"
     end
 
+    def transcode
+      Transcoder.transcode_from_folder(origin_folder: "#{self.save_path}/**/", destination_folder: self.save_path.gsub("/Qbit/PlexPending/tv-shows/", "/HandBroken/TV\ Shows/"))
+      delete_torrent
+    end
+
     def move_to_plex(isLocal: false)
-      if external_drive && !isLocal 
+      if external_drive && !isLocal
         destination_path = "/Volumes/plexserv/#{self.media_path}"
       else
         destination_path = "/Users/MattMcAlister/Movies/plex-movies-temp"
