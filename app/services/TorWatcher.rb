@@ -34,10 +34,10 @@ class TorWatcher
 
 
   def delay
-    delay_time = torrent.eta / 2
+    delay_time = torrent.eta / 4
 
-    if delay_time < 60
-      60
+    if delay_time < 30
+      30
     elsif delay_time > 1800
       1800
     else
