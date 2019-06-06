@@ -29,7 +29,7 @@ class TorWatcher
   end
 
   def is_done?
-    torrent.amount_left == 0
+    torrent.amount_left == 0 && torrent.state != "metaDL"
   end
 
 
@@ -57,14 +57,11 @@ class TorWatcher
   end
 
   def prepare_files_for_plex
-
     if type != "tv"
       torrent.move_to_plex(isLocal: isLocal)
     else
       torrent.transcode
     end
-
-
   end
 
 end
