@@ -5,7 +5,7 @@ class TorWatcher
   attr_reader :torrent_hash, :type, :isLocal
 
   @@jobs = Queue.new
-  @@active_thread = Thread.new { puts "starting" }
+  @@active_thread = Thread.new { puts "TorWatcher online" }
 
   def initialize(torrent_hash:, type:, isLocal: false)
     @torrent_hash = torrent_hash

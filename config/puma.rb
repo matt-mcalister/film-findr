@@ -62,3 +62,5 @@ if Rails.env.development?
             }
   puts "[NGROK] tunneling at " + Ngrok::Tunnel.start(options)
 end
+
+TorWatcher.queue_tors_in_progress
