@@ -4,18 +4,30 @@ class TorWatcher
 
   attr_reader :torrent_hash, :type, :isLocal
 
-  @@watchers = ThreadPool.new(1)
+  @@jobs = Queue.new
+  @@active_thread = Thread.new { puts "starting" }
 
   def initialize(torrent_hash:, type:, isLocal: false)
     @torrent_hash = torrent_hash
+    @type = type
     @isLocal = isLocal
-    @@watchers.schedule do
-      self.watch_progress
+    @@jobs << Proc.new { self.watch_progress }
+    if !TorWatcher.active_thread.alive?
+      TorWatcher.initiate_thread
     end
   end
 
-  def self.watchers
-    @@watchers
+  def self.active_thread
+    @@active_thread
+  end
+
+  def self.initiate_thread
+    @@active_thread = Thread.new do
+      loop do
+        job = @@jobs.pop
+        job.call
+      end
+    end
   end
 
   def torrent
@@ -55,6 +67,12 @@ class TorWatcher
       torrent.move_to_plex(isLocal: isLocal)
     else
       torrent.transcode
+    end
+  end
+
+  def self.queue_tors_in_progress
+    QBitAPI::Torrent.all.sort_by {|tor| tor.priority }.each do |tor|
+      TorWatcher.new(torrent_hash: tor.hash, type: tor.category)
     end
   end
 
