@@ -2,19 +2,13 @@ require Rails.root.join('app/services/ThreadPool.rb')
 
 class TorWatcher
 
-  attr_reader :torrent_hash, :type, :title, :isLocal, :season, :episode, :show_slug, :qbit_path
+  attr_reader :torrent_hash, :type, :isLocal
 
   @@watchers = ThreadPool.new(1)
 
-  def initialize(torrent_hash:, type:, title:, qbit_path:, isLocal: false, season: nil, episode: nil, show_slug: nil)
+  def initialize(torrent_hash:, type:, isLocal: false)
     @torrent_hash = torrent_hash
-    @type = type
-    @title = title
     @isLocal = isLocal
-    @season = season
-    @episode = episode
-    @show_slug = show_slug
-    @qbit_path = qbit_path
     @@watchers.schedule do
       self.watch_progress
     end

@@ -54,10 +54,10 @@ module QBitAPI
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/uhd"
     end
 
-    body = "hash=#{torrent_hash}&urls=#{magnet_url}&savepath=#{savepath}"
+    body = "hash=#{torrent_hash}&urls=#{magnet_url}&savepath=#{savepath}&category=#{type}"
 
     self.post("/add",{body: body})
-    TorWatcher.new(torrent_hash: torrent_hash, type: type, title: title, qbit_path: savepath, isLocal: isLocal, season: season, episode: episode, show_slug: show_slug)
+    TorWatcher.new(torrent_hash: torrent_hash, type: type, isLocal: isLocal)
   end
 
   def self.get_torrents
