@@ -13,6 +13,60 @@ module Rarbg
       @@categories
     end
 
+    def self.movie_search(imdb_id)
+      if !NordVPN.active?
+        NordVPN.restart
+      end
+      tor_results = self.query.search(format: :json_extended, category: [44,45,50,51,52], imdb: imdb_id)
+      formatted_results = {
+        "720p" => [],
+        "1080p" => [],
+        "UHD" => []
+      }
+      tor_results.each_with_object(formatted_results) do |tor, hash|
+        tor["source"] = "RARBG"
+        case tor["category"]
+        when "Movies/x264/1080"
+          hash["1080p"] << tor
+        when "Movies/x264/720"
+          hash["720p"] << tor
+        when "Movies/x264/4k", "Movies/x265/4k", "Movies/x265/4k/HDR"
+          hash["UHD"] << tor
+        end
+      end
+    end
+
+    def self.search_720p(imdb_id)
+      if !NordVPN.active?
+        NordVPN.restart
+      end
+      results = self.query.search(format: :json_extended, category: [45], imdb: imdb_id)
+      results.max_by {|tor| tor["seeders"]}
+    end
+
+    def self.search_1080p(imdb_id)
+      if !NordVPN.active?
+        NordVPN.restart
+      end
+      results = self.query.search(format: :json_extended, category: [44], imdb: imdb_id)
+      results.max_by {|tor| tor["seeders"]}
+    end
+
+    def self.search_UHD(imdb_id)
+      if !NordVPN.active?
+        NordVPN.restart
+      end
+      results = self.query.search(imdb: imdb_id, category: [50, 51, 52],format: :json_extended)
+      categories = {"Movs/x265/4k/HDR" => 3, "Movies/x265/4k" => 2, "Movies/x264/4k" => 1 }
+      top_uhd_torrent = results.first
+      results[1..-1].each do |tor|
+        if categories[tor["category"]] > categories[top_uhd_torrent["category"]] || (categories[tor["category"]] == categories[top_uhd_torrent["category"]] && tor["seeders"] > top_uhd_torrent["seeders"])
+          top_uhd_torrent = tor
+        end
+      end
+      top_uhd_torrent
+    end
+
     attr_accessor :imdb_id, :episodes, :formatted_episodes
 
     def initialize(imdb_id)
