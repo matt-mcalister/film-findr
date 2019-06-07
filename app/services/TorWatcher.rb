@@ -1,5 +1,3 @@
-require Rails.root.join('app/services/ThreadPool.rb')
-
 class TorWatcher
 
   attr_reader :torrent_hash, :type, :isLocal
