@@ -61,11 +61,13 @@ class TorWatcher
   end
 
   def prepare_files_for_plex
-    if type != "tv"
-      torrent.move_to_plex(isLocal: isLocal)
-    else
+    if type == "tv - full season" || type == "tv"
       torrent.transcode
+    else
+      torrent.move_to_plex(isLocal: isLocal)
     end
+
+
   end
 
   def self.queue_tors_in_progress
