@@ -30,10 +30,26 @@ module Rarbg
           hash["1080p"] << tor
         when "Movies/x264/720"
           hash["720p"] << tor
-        when "Movies/x264/4k", "Movies/x265/4k", "Movies/x265/4k/HDR"
+        when "Movies/x264/4k", "Movies/x265/4k", "Movs/x265/4k/HDR"
           hash["UHD"] << tor
         end
       end
+      formatted_results.keys.each do |key|
+        if key == "UHD"
+          results = formatted_results[key]
+          categories = {"Movs/x265/4k/HDR" => 3, "Movies/x265/4k" => 2, "Movies/x264/4k" => 1 }
+          top_uhd_torrent = results.first
+          results[1..-1].each do |tor|
+            if categories[tor["category"]] > categories[top_uhd_torrent["category"]] || (categories[tor["category"]] == categories[top_uhd_torrent["category"]] && tor["seeders"] > top_uhd_torrent["seeders"])
+              top_uhd_torrent = tor
+            end
+          end
+          formatted_results[key] = top_uhd_torrent
+        else
+          formatted_results[key] = formatted_results[key].max_by {|tor| tor["seeders"]}
+        end
+      end
+      formatted_results
     end
 
     def self.search_720p(imdb_id)
