@@ -161,7 +161,7 @@ module QBitAPI
     end
 
     def handle_mkv_files
-      if MkvInfo.new(file_to_move).uhd
+      if MkvInfo.new(self.save_path + file_to_move["name"]).uhd
         self.move_to_plex(isLocal: true)
       else
         self.transcode
