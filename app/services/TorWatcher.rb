@@ -20,6 +20,9 @@ class TorWatcher
   end
 
   def self.initiate_thread
+    if @@active_thread.class == Thread
+      @@active_thread.kill
+    end
     @@active_thread = Thread.new do
       loop do
         job = @@jobs.pop
