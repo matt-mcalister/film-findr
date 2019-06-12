@@ -5,7 +5,7 @@ class MkvInfo
     raise Errno::ENOENT, "the file '#{path}' does not exist" unless File.exists?(path)
     @path = path
     @output_string = `mkvinfo #{path}`
-    @uhd = @output_string.match(/HEVC/)
+    @uhd = !!@output_string.match(/HEVC/)
   end
 
 end
