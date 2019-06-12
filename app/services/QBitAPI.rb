@@ -149,6 +149,11 @@ module QBitAPI
           FileUtils.mv(original_path, new_path)
         end
       end
+      if files.any? {|file| file["name"][-4..-1] == ".mkv"}
+        self.transcode
+      else
+        self.move_to_plex
+      end      
     end
 
     def file_to_move
