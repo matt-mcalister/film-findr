@@ -130,6 +130,27 @@ module QBitAPI
       self
     end
 
+    def prepare_files_for_plex
+      if external_drive
+        destination_path = "/Volumes/plexserv/#{self.media_path}/#{self.save_path.split("/tv-shows/")[1]}"
+      else
+        destination_path = "/Users/MattMcAlister/Movies/plex-movies-temp/"
+      end
+      files = QBitAPI.get("/files?hash=#{hash}").parsed_response
+      files.select {|file| file["name"][-4..-1] == ".srt"}.each do  |srt_file|
+        original_path = "#{self.save_path}#{srt_file["name"]}"
+        new_path = "#{destination_path}#{srt_file["name"].split("/").last}"
+        puts "MOVING SUBTITLE TO: #{new_path}"
+        begin
+          FileUtils.mv(original_path, new_path)
+        rescue Errno::ENOENT => e
+          FileUtils.makedirs(new_path.split("/")[0...-1].join("/"))
+          puts "new folder made"
+          FileUtils.mv(original_path, new_path)
+        end
+      end
+    end
+
     def file_to_move
       r = QBitAPI.get("/files?hash=#{hash}")
       r.parsed_response.max_by {|tor| tor["size"]}
