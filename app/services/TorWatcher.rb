@@ -36,11 +36,15 @@ class TorWatcher
   end
 
   def is_done?
-    torrent.amount_left == 0 && torrent.state != "metaDL"
+    torrent.nil? || (torrent.amount_left == 0 && torrent.state != "metaDL")
   end
 
 
   def delay
+    if torrent.nil?
+      return 0
+    end
+
     delay_time = torrent.eta / 4
 
     if delay_time < 30
@@ -55,12 +59,12 @@ class TorWatcher
   def watch_progress
     puts "watching that progress"
     sleep(30)
-    until is_done?
+    until torrent.nil? || is_done?
       puts "NOT DONE, WILL CHECK IN #{delay}"
       sleep(delay)
     end
     puts "TOR DOWNLOAD COMPLETE #{torrent_hash}"
-    Thread.new { prepare_files_for_plex }
+    !torrent.nil? && Thread.new { torrent.prepare_files_for_plex }
   end
 
   def prepare_files_for_plex
