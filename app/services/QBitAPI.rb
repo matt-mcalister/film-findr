@@ -130,13 +130,12 @@ module QBitAPI
       self
     end
 
-    def prepare_files_for_plex
+    def handle_srt_files(files)
       if external_drive
         destination_path = "/Volumes/plexserv/#{self.media_path}/#{self.save_path.split("/tv-shows/")[1]}"
       else
         destination_path = "/Users/MattMcAlister/Movies/plex-movies-temp/"
       end
-      files = QBitAPI.get("/files?hash=#{hash}").parsed_response
       files.select {|file| file["name"][-4..-1] == ".srt"}.each do  |srt_file|
         original_path = "#{self.save_path}#{srt_file["name"]}"
         new_path = "#{destination_path}#{srt_file["name"].split("/").last}"
@@ -149,11 +148,24 @@ module QBitAPI
           FileUtils.mv(original_path, new_path)
         end
       end
+    end
+
+    def prepare_files_for_plex
+      files = QBitAPI.get("/files?hash=#{hash}").parsed_response
+      self.handle_srt_files(files)
       if files.any? {|file| file["name"][-4..-1] == ".mkv"}
-        self.transcode
+        self.handle_mkv_files
       else
         self.move_to_plex
-      end      
+      end
+    end
+
+    def handle_mkv_files
+      if MkvInfo.new(file_to_move).uhd
+        self.move_to_plex(isLocal: true)
+      else
+        self.transcode
+      end
     end
 
     def file_to_move
