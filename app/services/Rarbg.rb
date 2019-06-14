@@ -35,7 +35,7 @@ module Rarbg
         end
       end
       formatted_results.keys.each do |key|
-        if key == "UHD"
+        if key == "UHD" && formatted_results[key].length >= 1
           results = formatted_results[key]
           categories = {"Movs/x265/4k/HDR" => 3, "Movies/x265/4k" => 2, "Movies/x264/4k" => 1 }
           top_uhd_torrent = results.first
