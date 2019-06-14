@@ -12,4 +12,23 @@ class YtsAPI
     end
   end
 
+  def self.best_tor_by_imdb_id(imdb_id)
+    tor_results = self.search(imdb_id).first
+    formatted_results = {
+      "720p" => [],
+      "1080p" => []
+    }
+    if tor_results.nil?
+      return formatted_results
+    end
+    tor_results["torrents"].each_with_object(formatted_results) do |tor, hash|
+      tor["source"] = "YTS"
+      hash[tor["quality"]] << tor
+    end
+    formatted_results.keys.each do |key|
+      formatted_results[key] = formatted_results[key].max_by {|tor| tor["seeds"]}
+    end
+    formatted_results
+  end
+
 end
