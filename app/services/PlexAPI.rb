@@ -42,6 +42,24 @@ module PlexAPI
     r
   end
 
+  def self.get_all
+    r = self.get("/library/all")
+    if r && r.parsed_response["MediaContainer"]["Metadata"]
+      items = r.parsed_response["MediaContainer"]["Metadata"].map {|plex_item| PlexAPI::Item.new(plex_item)}
+      PlexAPI::Item.threads.map(&:join)
+      items
+    else
+      []
+    end
+  end
+
+  def self.find_by_imdb_id(imdb_id)
+    self.get_all.find {|item| item.guid_exists? && item.guid.include?(imdb_id)}
+  end
+
+  def self.find_by_tvdb_id(tvdb_id)
+    self.get_all.find {|item| item.guid_exists? && item.guid.include?(tvdb_id.to_s)}
+  end
 
   def self.image(thumb)
     PlexAPI.get(thumb)
@@ -82,6 +100,121 @@ module PlexAPI
       end
     end
     plex_seasons
+  end
+
+  def self.get_all
+    r = self.get("/library/all")
+    if r && r.parsed_response["MediaContainer"]["Metadata"]
+      items = r.parsed_response["MediaContainer"]["Metadata"].map {|plex_item| PlexAPI::Item.new(plex_item)}
+      PlexAPI::Item.threads.map(&:join)
+      items
+    else
+      []
+    end
+  end
+
+  def self.find_by_imdb_id(imdb_id)
+    self.get_all.find {|item| item.guid_exists? && item.guid.include?(imdb_id)}
+  end
+
+  def self.find_by_tvdb_id(tvdb_id)
+    self.get_all.find {|item| item.guid_exists? && item.guid.include?(tvdb_id.to_s)}
+  end
+
+  class Item
+    @@threads = []
+    def self.threads
+      @@threads
+    end
+
+    attr_accessor(:ratingKey,
+                  :key,
+                  :librarySectionTitle,
+                  :librarySectionID,
+                  :librarySectionKey,
+                  :studio,
+                  :type,
+                  :title,
+                  :titleSort,
+                  :summary,
+                  :rating,
+                  :viewCount,
+                  :lastViewedAt,
+                  :year,
+                  :tagline,
+                  :thumb,
+                  :art,
+                  :duration,
+                  :originallyAvailableAt,
+                  :addedAt,
+                  :updatedAt,
+                  :chapterSource,
+                  :Genre,
+                  :Director,
+                  :Writer,
+                  :Country,
+                  :Role,
+                  :contentRating,
+                  :audienceRating,
+                  :audienceRatingImage,
+                  :ratingImage,
+                  :Collection,
+                  :primaryExtraKey,
+                  :index,
+                  :banner,
+                  :theme,
+                  :leafCount,
+                  :viewedLeafCount,
+                  :childCount,
+                  :parentRatingKey,
+                  :parentKey,
+                  :parentTitle,
+                  :parentIndex,
+                  :parentThumb,
+                  :parentTheme,
+                  :grandparentRatingKey,
+                  :grandparentKey,
+                  :grandparentTitle,
+                  :viewOffset,
+                  :grandparentThumb,
+                  :grandparentArt,
+                  :grandparentTheme,
+                  :subtype,
+                  :maxYear,
+                  :minYear,
+                  :originalTitle,
+                  :guid,
+                  :Media,
+                  :Similar,
+                  :Field,
+                  :Producer,
+                  :got_meta_data)
+
+    def initialize(plex_hash)
+      plex_hash.each do |key,value|
+        self.send("#{key}=", value)
+      end
+      @got_meta_data = false
+      @@threads << Thread.new { get_metadata }
+    end
+
+    def guid_exists?
+      guid || get_metadata.guid
+    end
+
+    def get_metadata
+      r = PlexAPI.get(key.split("/children").first)
+      if r && r.parsed_response["MediaContainer"]["Metadata"]
+        r.parsed_response["MediaContainer"]["Metadata"].first.each do |key,value|
+          if key == "guid" && self.respond_to?(key)
+            self.send("#{key}=", value)
+          end
+        end
+        @got_meta_data = true
+      end
+      self
+    end
+
   end
 
   class Query
