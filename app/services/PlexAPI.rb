@@ -102,24 +102,6 @@ module PlexAPI
     plex_seasons
   end
 
-  def self.get_all
-    r = self.get("/library/all")
-    if r && r.parsed_response["MediaContainer"]["Metadata"]
-      items = r.parsed_response["MediaContainer"]["Metadata"].map {|plex_item| PlexAPI::Item.new(plex_item)}
-      PlexAPI::Item.threads.map(&:join)
-      items
-    else
-      []
-    end
-  end
-
-  def self.find_by_imdb_id(imdb_id)
-    self.get_all.find {|item| item.guid_exists? && item.guid.include?(imdb_id)}
-  end
-
-  def self.find_by_tvdb_id(tvdb_id)
-    self.get_all.find {|item| item.guid_exists? && item.guid.include?(tvdb_id.to_s)}
-  end
 
   class Item
     @@threads = []
