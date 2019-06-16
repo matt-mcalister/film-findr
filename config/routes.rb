@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
      post '/films', to: 'films#search'
+     post '/films/imdb_id', to: 'films#find_by_imdb_id'
      post '/films/download', to: 'films#download'
      post '/films/thumbnail', to: 'films#thumbnail'
      post '/films/4k', to: 'films#get_4k'
