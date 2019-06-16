@@ -66,10 +66,6 @@ class YTSItem extends React.Component {
   }
 
   render() {
-    console.log("***********");
-    console.log("PROPS: ", this.props);
-    console.log("STATE: ", this.state);
-    console.log("***********");
     return(
       <div className="item yts">
       <img src={this.props.medium_cover_image} alt={this.props.title} />
