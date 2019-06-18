@@ -17,6 +17,7 @@ class NavBar extends React.Component {
 
   handleSubmit(e){
     e.preventDefault()
+    this.props.beginSearch()
     let route = this.state.searchType === "film" ? "films" : "films/tv"
     fetch(`/api/v1/${route}`, {
       method: "POST",
@@ -28,7 +29,7 @@ class NavBar extends React.Component {
       })
     }).then(res => res.json())
       .then(({ results }) => {
-        this.props.handleSearch(results)
+        this.props.handleSearch({ results, searchType: this.state.searchType })
       })
   }
 
