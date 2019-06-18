@@ -27,7 +27,12 @@
  }
 
  .flex {
-   display: flex
+   display: flex;
+   justify-content: center;
+ }
+
+ .flex-wrap {
+   flex-wrap: wrap;
  }
 
  .center {
@@ -43,7 +48,29 @@
    flex-direction: row
  }
 
+ .column {
+   flex-direction: column;
+ }
+
+ .center-text {
+   text-align: center;
+ }
+
  .search-bar {
    max-width: 300;
    width: 18zem;
  }
+
+ .search-results {
+   margin: 10px auto
+ }
+
+ .item {
+  min-width: 300px;
+  width: 25vw;
+  padding: 10px;
+}
+
+.item > img {
+  width: 230px;
+}
