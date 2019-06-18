@@ -6,18 +6,8 @@ class Api::V1::FilmsController < ApplicationController
 
     term = params[:search_term]
 
-    query = PlexAPI::Query.new(term, :film)
-    query.search_with_torrents
-
-    if query.results || query.torrents
-      render json: {
-        results_found: true,
-        plex: { results: query.results },
-        yts: { results: query.torrents }
-      }
-    else
-      render json: { results_found: false }
-    end
+    results = OMDBQuery.search(term)
+    render json: {results: results}
   end
 
   def find_by_imdb_id
@@ -47,18 +37,8 @@ class Api::V1::FilmsController < ApplicationController
 
     term = params[:search_term]
 
-    query = PlexAPI::Query.new(term, :tv)
-    query.search_with_torrents
-
-    if query.results || query.torrents
-      render json: {
-        results_found: true,
-        plex: { results: query.results },
-        tvdb: { results: query.torrents }
-      }
-    else
-      render json: { results_found: false }
-    end
+    results = TVDBQuery.search_by_name(term)
+    render json: { results: results }
   end
 
   def get_seasons
