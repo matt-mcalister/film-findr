@@ -45,15 +45,20 @@ class TVDBQuery
     end
     r = HTTParty.get(BASE_URL + "/search/series?name=#{name.gsub(" ", "%20")}", self.options)
     if r.parsed_response["data"]
-      r.parsed_response["data"].map do |show|
-        posters = HTTParty.get(BASE_URL + "/series/#{show["id"]}/images/query?keyType=poster", self.options).parsed_response["data"]
-        if posters.nil?
-          show["image_url"] = "http://www.reelviews.net/resources/img/default_poster.jpg"
-        else
-          show["image_url"] = "https://www.thetvdb.com/banners/#{posters.last["fileName"]}"
-        end
+      threads = []
+      results = r.parsed_response["data"].map do |show|
+        threads << Thread.new {
+          posters = HTTParty.get(BASE_URL + "/series/#{show["id"]}/images/query?keyType=poster", self.options).parsed_response["data"]
+          if posters.nil?
+            show["image_url"] = "http://www.reelviews.net/resources/img/default_poster.jpg"
+          else
+            show["image_url"] = "https://www.thetvdb.com/banners/#{posters.last["fileName"]}"
+          end
+        }
         show
       end
+      threads.map(&:join)
+      results.uniq
     else
       []
     end

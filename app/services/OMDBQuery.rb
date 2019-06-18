@@ -7,7 +7,7 @@ class OMDBQuery
       if response.parsed_response["Response"] == "False"
         results = []
       else
-        results = response.parsed_response["Search"]
+        results = response.parsed_response["Search"].uniq
       end
     else
       results = []
