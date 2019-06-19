@@ -11,6 +11,7 @@ class Landing extends React.Component {
     this.handleSearch = this.handleSearch.bind(this)
     this.beginSearch = this.beginSearch.bind(this)
     this.selectItem = this.selectItem.bind(this)
+    this.backToResults = this.backToResults.bind(this)
   }
 
   handleSearch({ results, searchType }){
@@ -36,6 +37,12 @@ class Landing extends React.Component {
     })
   }
 
+  backToResults(){
+    this.setState({
+      selectedItem: null
+    })
+  }
+
   render() {
     return (
       <div>
@@ -43,7 +50,7 @@ class Landing extends React.Component {
         {
           this.state.loading ? <Loading /> :
           this.state.results && !this.state.selectedItem ? <SearchResults results={this.state.results} searchType={this.state.searchType} selectItem={this.selectItem}/> :
-          this.state.selectedItem && <SelectedItem searchType={this.state.searchType} item={this.state.selectedItem} />
+          this.state.selectedItem && <SelectedItem searchType={this.state.searchType} item={this.state.selectedItem} backToResults={this.backToResults}/>
         }
       </div>
     )

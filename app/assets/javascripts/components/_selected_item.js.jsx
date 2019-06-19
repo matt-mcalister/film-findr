@@ -3,8 +3,26 @@ class SelectedItem extends React.Component {
     super(props)
 
     this.state = {
-      torrents: null,
-      torrentSearched: false,
+      description: props.searchType === "film" ? null : props.item.overview,
+    }
+  }
+
+  componentDidMount(){
+    console.log(this.props);
+    if (this.props.searchType){
+      fetch("/api/v1/films/info", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          imdb_id: this.props.item.imdbID
+        })
+      }).then(res => res.json()).then(data => {
+        this.setState({
+          description: data.Plot
+        })
+      })
     }
   }
 
@@ -13,7 +31,6 @@ class SelectedItem extends React.Component {
     let poster = "image_url"
     let title = "seriesName"
     let year = "firstAired"
-    let description = "overview"
     if (searchType === "film") {
       poster = "Poster"
       title = "Title"
@@ -21,14 +38,17 @@ class SelectedItem extends React.Component {
     }
     let img = item[poster] === "N/A" ? "http://www.reelviews.net/resources/img/default_poster.jpg" : item[poster]
     return (
-      <div className="flex row flex-wrap selected-item center space-around">
-      <img src={img} alt={item[title]} />
-      <div>
-        <h4>{item[title]} {item[year] && `(${item[year].split("-")[0]})`}</h4>
-        {item[description] && <p>{item[description]}</p>}
-        {searchType === "film" ? <FilmTors imdbID={item.imdbID}/> : <TVTors tvdbId={item.id} />}
-      </div>
-      </div>
+      <React.Fragment>
+        <button onClick={this.props.backToResults} className="back-button">← Back to search results</button>
+        <div className="flex row flex-wrap selected-item center space-around">
+          <img src={img} alt={item[title]} />
+          <div>
+            <h4>{item[title]} {item[year] && `(${item[year].split("-")[0]})`}</h4>
+            {this.state.description && <p>{this.state.description}</p>}
+            {searchType === "film" ? <FilmTors imdbID={item.imdbID}/> : <TVTors tvdbId={item.id} />}
+          </div>
+        </div>
+      </React.Fragment>
     )
   }
 }
