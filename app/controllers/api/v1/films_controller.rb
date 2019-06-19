@@ -70,6 +70,8 @@ class Api::V1::FilmsController < ApplicationController
       episode: params[:episode],
       show_slug: params[:show_slug],
       isLocal: params[:isLocal],
+      imdbID: params[:imdbID],
+      tvdbID: params[:tvdbID],
       title: params[:title])
   end
 

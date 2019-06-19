@@ -79,7 +79,7 @@ class TorWatcher
 
   def self.queue_tors_in_progress
     QBitAPI::Torrent.all.sort_by {|tor| tor.priority }.each do |tor|
-      TorWatcher.new(torrent_hash: tor.hash, type: tor.category)
+      TorWatcher.new(torrent_hash: tor.hash, type: tor.category["type"])
     end
   end
 
