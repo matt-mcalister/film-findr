@@ -4,7 +4,8 @@ class FilmTors extends React.Component {
     this.state = {
       torrents: null,
       loading: true,
-      inPlex: false
+      inPlex: false,
+      downloadInProgress: false,
     }
     this.download = this.download.bind(this)
   }
@@ -18,10 +19,11 @@ class FilmTors extends React.Component {
       body: JSON.stringify({
         imdb_id: this.props.imdbID
       })
-    }).then(r => r.json()).then(({torrents, inPlex}) => {
+    }).then(r => r.json()).then(({torrents, inPlex, downloadInProgress}) => {
       this.setState({
         torrents,
         inPlex,
+        downloadInProgress,
         loading: false
       })
     })
@@ -51,6 +53,10 @@ class FilmTors extends React.Component {
         type: type,
         magnet_url: `magnet:?xt=urn:btih:${hash}`
       })
+    }).then(() => {
+      this.setState({
+        downloadInProgress: true
+      })
     })
   }
 
@@ -60,6 +66,9 @@ class FilmTors extends React.Component {
     }
     if (this.state.inPlex){
       return <p>Currently in Plex</p>
+    }
+    if (this.state.downloadInProgress){
+      return <p>Download in progress</p>
     }
     let torrents = this.state.torrents || {}
     let foundTorrents = Object.keys(torrents).filter( resolution => {
