@@ -44,7 +44,7 @@ module QBitAPI
     #  adds to appropriate file path:
       # ~/Movies/Qbit/PlexPending/movies
       # ~/Movies/Qbit/PlexPending/tv-shows/#{NAME OF SHOW}/#{SEASON NUMBER}
-  def self.add_torrent(torrent_hash:, type:, magnet_url:, title:, isLocal: false, season: nil, episode: nil, show_slug: nil)
+  def self.add_torrent(torrent_hash:, type:, magnet_url:, title:, imdbID: nil, tvdbID: nil, isLocal: false, season: nil, episode: nil, show_slug: nil)
     case type
     when "film"
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/movies"
@@ -54,7 +54,14 @@ module QBitAPI
       savepath = "/Users/MattMcAlister/Movies/Qbit/PlexPending/uhd"
     end
 
-    body = "hash=#{torrent_hash}&urls=#{magnet_url}&savepath=#{savepath}&category=#{type}"
+    info = {
+      type: type,
+      title: title,
+      imdbID: imdbID,
+      tvdbID: tvdbID
+    }.to_json
+
+    body = "hash=#{torrent_hash}&urls=#{magnet_url}&savepath=#{savepath}&category=#{info}"
 
     self.post("/add",{body: body})
     TorWatcher.new(torrent_hash: torrent_hash, type: type, isLocal: isLocal)
@@ -128,6 +135,10 @@ module QBitAPI
         @media_path = "plex-movies-temp"
       end
       self
+    end
+
+    def category
+      JSON.parse(@category)
     end
 
     def handle_srt_files(files)
