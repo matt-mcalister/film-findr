@@ -16,7 +16,7 @@ class OMDBQuery
   end
 
   def self.find_by_imdb_id(imdbID)
-    response = HTTParty.get("http://www.omdbapi.com/?type=movie&i=#{imdbID}&apikey=#{ENV["OMDB_API_KEY"]}")
+    response = HTTParty.get("http://www.omdbapi.com/?type=movie&i=#{imdbID}&plot=full&apikey=#{ENV["OMDB_API_KEY"]}")
     if response.parsed_response["Response"] == "false"
       result = {}
     else
