@@ -46,11 +46,11 @@ class Landing extends React.Component {
   render() {
     return (
       <div>
-        <NavBar handleSearch={this.handleSearch} beginSearch={this.beginSearch}/>
+        <NavBar handleSearch={this.handleSearch} beginSearch={this.beginSearch} backToResults={this.backToResults} showBackButton={!!this.state.selectedItem}/>
         {
           this.state.loading ? <Loading /> :
           this.state.results && !this.state.selectedItem ? <SearchResults results={this.state.results} searchType={this.state.searchType} selectItem={this.selectItem}/> :
-          this.state.selectedItem && <SelectedItem searchType={this.state.searchType} item={this.state.selectedItem} backToResults={this.backToResults}/>
+          this.state.selectedItem && <SelectedItem searchType={this.state.searchType} item={this.state.selectedItem} />
         }
       </div>
     )

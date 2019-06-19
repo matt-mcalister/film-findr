@@ -36,6 +36,7 @@ class NavBar extends React.Component {
   render(){
     return (
       <div className="flex row center space-between navbar">
+      <div>
         <form className="flex row search-bar space-between" onSubmit={this.handleSubmit}>
           <input type="text" value={this.state.searchTerm} name="searchTerm" onChange={this.handleChange} />
           <select id="media-selector" value={this.state.searchType} name="searchType" onChange={this.handleChange}>
@@ -44,6 +45,8 @@ class NavBar extends React.Component {
           </select>
           <input type="submit" value="Search"/>
         </form>
+        {this.props.showBackButton && <button onClick={this.props.backToResults} className="back-button">← Back to search results</button>}
+        </div>
       </div>
     )
   }

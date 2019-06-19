@@ -38,8 +38,6 @@ class SelectedItem extends React.Component {
     }
     let img = item[poster] === "N/A" ? "http://www.reelviews.net/resources/img/default_poster.jpg" : item[poster]
     return (
-      <React.Fragment>
-        <button onClick={this.props.backToResults} className="back-button">← Back to search results</button>
         <div className="flex row flex-wrap selected-item center space-around">
           <img src={img} alt={item[title]} />
           <div>
@@ -48,7 +46,6 @@ class SelectedItem extends React.Component {
             {searchType === "film" ? <FilmTors imdbID={item.imdbID}/> : <TVTors tvdbId={item.id} />}
           </div>
         </div>
-      </React.Fragment>
     )
   }
 }
