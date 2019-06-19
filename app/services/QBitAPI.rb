@@ -72,11 +72,11 @@ module QBitAPI
     r.parsed_response
   end
 
-  def self.find_by_imbd_id(imdbID)
+  def self.find_by_imdb_id(imdbID)
     QBitAPI::Torrent.all.find {|tor| tor.category["imdbID"] == imdbID}
   end
 
-  def self.find_by_tvbd_id(tvdbID)
+  def self.find_by_tvdb_id(tvdbID)
     QBitAPI::Torrent.all.find {|tor| tor.category["tvdbID"] == tvdbID}
   end
 
