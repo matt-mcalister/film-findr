@@ -15,6 +15,11 @@ class Api::V1::FilmsController < ApplicationController
     render json: torrents
   end
 
+  def info
+    omdb_info = OMDBQuery.find_by_imdb_id(params[:imdb_id])
+    render json: omdb_info
+  end
+
   def get_4k
     rarbg = RARBG::API.new
     torrent_results = rarbg.search(imdb: params[:imdb_id], category: [50, 51, 52],format: :json_extended)
