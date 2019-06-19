@@ -14,10 +14,12 @@ class Api::V1::FilmsController < ApplicationController
     threads = []
     torrents = {}
     in_plex = false
+    download_in_progress = false
     threads << Thread.new { torrents = TorFinder::Movie.search(params[:imdb_id]) }
     threads << Thread.new { in_plex = PlexAPI.find_by_imdb_id(params[:imdb_id]) }
+    threads << Thread.new { download_in_progress = !!QBitAPI.find_by_imdb_id(params[:imdb_id]) }
     threads.map(&:join)
-    render json: {torrents: torrents, inPlex: in_plex}
+    render json: {torrents: torrents, inPlex: in_plex, downloadInProgress: download_in_progress}
   end
 
   def info
