@@ -8,8 +8,7 @@ class SelectedItem extends React.Component {
   }
 
   componentDidMount(){
-    console.log(this.props);
-    if (this.props.searchType){
+    if (this.props.searchType === "film"){
       fetch("/api/v1/films/info", {
         method: "POST",
         headers: {
