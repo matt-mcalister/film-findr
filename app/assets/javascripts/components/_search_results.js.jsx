@@ -1,5 +1,4 @@
 const SearchResults = ({ results, searchType, selectItem }) => {
-  console.log("RESULTS: ", results)
   if (!results || results.length === 0) {
     return <h1>Not Found</h1>
   }
