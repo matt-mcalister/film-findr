@@ -23,7 +23,8 @@
    color: #e5a00d;
    min-height: 50px;
    height: 10vh;
-   padding: 10px
+   padding: 10px;
+   margin-bottom: 5px
  }
 
  .flex {
@@ -44,6 +45,14 @@
    justify-content: space-between;
  }
 
+ .space-around {
+   justify-content: space-around;
+ }
+
+ .flex-start {
+   align-items: flex-start;
+ }
+
  .row {
    flex-direction: row
  }
@@ -57,8 +66,8 @@
  }
 
  .search-bar {
-   max-width: 300;
-   width: 18zem;
+   max-width: 300px;
+   width: 18em;
  }
 
  .search-results {
@@ -66,11 +75,22 @@
  }
 
  .item {
-  min-width: 300px;
+  min-width: 280px;
   width: 25vw;
   padding: 10px;
 }
 
 .item > img {
   width: 230px;
+}
+
+.selected-item > img {
+  min-width: 280px;
+  width: 25vw;
+}
+
+.selected-item > div {
+  max-width: 300px;
+  min-width: 50vw;
+  text-align: center;
 }
