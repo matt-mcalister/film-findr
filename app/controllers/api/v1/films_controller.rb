@@ -11,8 +11,13 @@ class Api::V1::FilmsController < ApplicationController
   end
 
   def find_by_imdb_id
-    torrents = TorFinder::Movie.search(params[:imdb_id])
-    render json: torrents
+    threads = []
+    torrents = {}
+    in_plex = false
+    threads << Thread.new { torrents = TorFinder::Movie.search(params[:imdb_id]) }
+    threads << Thread.new { in_plex = PlexAPI.find_by_imdb_id(params[:imdb_id]) }
+    threads.map(&:join)
+    render json: {torrents: torrents, inPlex: in_plex}
   end
 
   def info

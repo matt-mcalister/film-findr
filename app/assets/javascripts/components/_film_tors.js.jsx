@@ -4,6 +4,7 @@ class FilmTors extends React.Component {
     this.state = {
       torrents: null,
       loading: true,
+      inPlex: false
     }
   }
 
@@ -16,9 +17,10 @@ class FilmTors extends React.Component {
       body: JSON.stringify({
         imdb_id: this.props.imdbID
       })
-    }).then(r => r.json()).then((torrents) => {
+    }).then(r => r.json()).then(({torrents, inPlex}) => {
       this.setState({
         torrents,
+        inPlex,
         loading: false
       })
     })
@@ -27,6 +29,9 @@ class FilmTors extends React.Component {
   render(){
     if (this.state.loading) {
       return <Loading />
+    }
+    if (this.state.inPlex){
+      return <p>Currently in Plex</p>
     }
     let torrents = this.state.torrents || {}
     console.log(this.state.torrents);
