@@ -1,41 +1,70 @@
 class EZTVQuery
   attr_accessor :imdb_id, :episodes, :formatted_episodes
-  # attr_reader :title, :formatted_title
 
   def initialize(imdb_id)
     @imdb_id = imdb_id
     @episodes = []
     @formatted_episodes = {}
+    @search_complete = false
+    @torrents_count = nil
   end
 
-  def find_episodes
-    counter = 1
-    url = "https://eztv.io/api/get-torrents?imdb_id=#{self.imdb_id}&page=#{counter}"
+  def assign_thread_pool
+    @thread_pool && @thread_pool.kill_all!
+    @thread_pool = ThreadPool.new(30)
+  end
+
+  def get_episodes_by_page(page)
     if !NordVPN.active?
       NordVPN.restart
     end
-    res = HTTParty.get(url)
-    thread_pool = ThreadPool.new(100)
-    self.episodes << res.parsed_response["torrents"]
-    until self.episodes.length >= res.parsed_response["torrents_count"].to_i || counter == 100
-      thread_pool.schedule do
-        counter += 1
-        begin
-          res = HTTParty.get("https://eztv.io/api/get-torrents?imdb_id=#{self.imdb_id}&page=#{counter}")
+    if !@search_complete
+      begin
+        res = HTTParty.get("https://eztv.io/api/get-torrents?imdb_id=#{self.imdb_id}&page=#{page}")
+        puts "#{page}: status code #{res.response.code}"
+        puts "#{page}: torrents returned #{res.parsed_response["torrents"].nil? ? 0 : res.parsed_response["torrents"].length}"
+        @torrents_count ||= res.parsed_response["torrents_count"]
+        if res.response.code == "200" && !res.parsed_response["torrents"].nil?
           self.episodes << res.parsed_response["torrents"]
           self.episodes = self.episodes.flatten
-        rescue
-          puts "nope: #{counter}"
+        else
+          @search_complete = true
+        end
+      rescue => e
+        puts e
+        puts "nope: #{page}"
+        @search_complete = true
+      end
+    else
+      @thread_pool.schedule { throw :exit }
+    end
+  end
+
+  def find_episodes(page: 1)
+    assign_thread_pool
+    (page..page+30).each do |page|
+      if !@search_complete
+        @thread_pool.schedule do
+          get_episodes_by_page(page)
         end
       end
     end
-    thread_pool.run!
-    self.episodes
+    puts 'running'
+    @thread_pool.run!
+    self.episodes = self.episodes.uniq
+    if !@search_complete && !found_all?
+      find_episodes(page: page+29)
+    end
+    "done"
+  end
+
+  def found_all?
+    @torrents_count && self.episodes.length == @torrents_count.to_i
   end
 
   def filter_episodes
     self.episodes.each do |ep|
-      if ep["season"] == "0" && ep["episode"] == "0"
+      if (ep["season"].nil? && ep["episode"].nil?) || (ep["season"] == "0" && ep["episode"] == "0")
         season, episode = ep["title"].scan(/S(\d+)+|E(\d+)+/).map {|arr| arr.compact.first.to_i.to_s}
       else
         season = ep["season"]
