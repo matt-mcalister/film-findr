@@ -27,4 +27,8 @@ class ThreadPool
     end
     @pool.map(&:join)
   end
+
+  def kill_all!
+    @pool.map(&:kill)
+  end
 end
