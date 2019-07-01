@@ -33,4 +33,17 @@ module TorFinder
     end
   end
 
+  class Tv
+    def self.search(tvdb_id)
+      imdb_id = TVDBQuery.get_imdb_id(tvdb_id)
+      threads = []
+      # eztv_results = {}
+      rarbg_results = {}
+      # threads << Thread.new { eztv_results = EZTVQuery.get_torrents_by_id(imdb_id) }
+      threads << Thread.new { rarbg_results = Rarbg::Search.get_torrents_by_id(imdb_id) }
+      threads.map(&:join)
+      rarbg_results
+    end
+  end
+
 end
