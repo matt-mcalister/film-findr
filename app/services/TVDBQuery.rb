@@ -103,6 +103,14 @@ class TVDBQuery
     r.parsed_response["data"]
   end
 
+  def self.get_show_by_imdb_id(imdb_id)
+    if self.token == ""
+      self.assign_token
+    end
+    r = HTTParty.get(BASE_URL + "/search/series?imdbId=tt#{imdb_id}", self.options)
+    r.response.code == "200" && r.parsed_response["data"] ? r.parsed_response["data"] : nil
+  end
+
   def self.num_seasons(tvdb_id)
     if self.token == ""
       self.assign_token
