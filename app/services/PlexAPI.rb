@@ -85,7 +85,10 @@ module PlexAPI
     seasons
   end
 
-  def self.get_seasons_with_torrents(tvdb_id:, plex_id:)
+  def self.get_seasons_with_torrents(tvdb_id:, plex_id: nil)
+    if plex_id.nil?
+      plex_id = self.find_by_tvdb_id(tvdb_id)
+    end
     plex_seasons = TVDBQuery.get_seasons(tvdb_id: tvdb_id, plex_id: plex_id)
     imdbId = TVDBQuery.get_imdb_id(tvdb_id)
     torrent_seasons = Rarbg::Search.get_torrents_by_id(imdbId)
