@@ -101,6 +101,19 @@ module Rarbg
       self.episodes = self.episodes.flatten
     end
 
+    def find_episodes_by_seasons
+      num_seasons = TVDBQuery.num_seasons_by_imdb_id(imdb_id)
+      if num_seasons
+        (1..num_seasons.to_i).each do |season|
+          find_episodes(season: season)
+          sleep(0.2)
+        end
+        self.episodes
+      else
+        find_episodes
+      end
+    end
+
     def filter_episodes
       self.episodes.each do |download|
         if download.season.nil?
@@ -130,7 +143,7 @@ module Rarbg
 
     def self.get_torrents_by_id(imdbid)
       q = self.new(imdbid)
-      q.find_episodes
+      q.find_episodes_by_seasons
       q.filter_episodes
     end
 
