@@ -42,7 +42,7 @@ class SelectedItem extends React.Component {
           <div>
             <h4>{item[title]} {item[year] && `(${item[year].split("-")[0]})`}</h4>
             {this.state.description && <p>{this.state.description}</p>}
-            {searchType === "film" ? <FilmTors title={item[title]} imdbID={item.imdbID}/> : <TVTors tvdbId={item.id} />}
+            {searchType === "film" ? <FilmTors title={item[title]} imdbID={item.imdbID}/> : <TVTors tvdbId={item.id} slug={item.slug} seriesName={item.seriesName}/>}
           </div>
         </div>
     )

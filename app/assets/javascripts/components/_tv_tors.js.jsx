@@ -8,7 +8,6 @@ class TVTors extends React.Component {
     }
     this.selectSeason = this.selectSeason.bind(this)
     this.addToPlex = this.addToPlex.bind(this)
-    this.downloadFullSeason = this.downloadFullSeason.bind(this)
   }
 
   componentDidMount(){
@@ -38,6 +37,32 @@ class TVTors extends React.Component {
     })
   }
 
+  addToPlex(episode){
+    let torrent_hash = episode.torrent_info.magnet_url.match(/.+(?=\&dn=)/)[0].replace("magnet:?xt=urn:btih:", "")
+    const seasons = {...this.state.seasons}
+    seasons[this.state.selectedSeason][episode.airedEpisodeNumber].downloadInProgress = true
+    this.setState({
+      seasons: seasons
+    })
+    fetch("/api/v1/films/download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        torrent_hash: torrent_hash,
+        type: "tv",
+        tvdbID: this.props.tvdbId,
+        magnet_url: episode.torrent_info.magnet_url,
+        season: episode.airedSeason,
+        episode: episode.airedEpisodeNumber,
+        show_slug: this.props.slug,
+        title: this.props.seriesName,
+        isLocal: false,
+      })
+    })
+  }
+
   render(){
     if (this.state.loading) {
       return <Loading />
@@ -47,7 +72,7 @@ class TVTors extends React.Component {
       <div>
       {seasons.length > 0 && <SeasonPicker seasons={Object.keys(this.state.seasons)} selectedSeason={this.state.selectedSeason} selectSeason={this.selectSeason} />}
       {seasons.length > 0 && this.state.seasons[this.state.selectedSeason]["full_season"] && <button onClick={console.log}>Full Season Download Available</button>}
-      {this.state.seasons[this.state.selectedSeason] && <EpisodesList episodes={this.state.seasons[this.state.selectedSeason]} addToPlex={console.log}/>}
+      {this.state.seasons[this.state.selectedSeason] && <EpisodesList episodes={this.state.seasons[this.state.selectedSeason]} addToPlex={this.addToPlex}/>}
       </div>
     )
 
