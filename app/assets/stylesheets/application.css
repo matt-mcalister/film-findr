@@ -91,6 +91,18 @@
 
 .selected-item > div {
   max-width: 300px;
-  min-width: 50vw;
+  min-width: 70vw;
   text-align: center;
+}
+
+.scroll-y {
+  overflow-y: scroll;
+}
+
+.episode-list {
+  max-height: 60vh;
+}
+
+.episode {
+  width:auto;/
 }
