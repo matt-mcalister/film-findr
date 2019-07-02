@@ -114,7 +114,6 @@ GEM
     nio4r (2.3.1)
     nokogiri (1.10.1)
       mini_portile2 (~> 2.4.0)
-    pg (1.0.0)
     public_suffix (3.0.3)
     puma (3.12.0)
     rack (2.0.6)
@@ -229,7 +228,6 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
   ngrok-tunnel
-  pg (>= 0.18, < 2.0)
   puma (~> 3.7)
   rails (~> 5.1.6, >= 5.1.6.1)
   rarbg (~> 1.3)
