@@ -87,11 +87,14 @@ module PlexAPI
 
   def self.get_seasons_with_torrents(tvdb_id:, plex_id: nil)
     if plex_id.nil?
-      plex_id = self.find_by_tvdb_id(tvdb_id)
+      plex_id = self.find_by_tvdb_id(tvdb_id).ratingKey
     end
-    plex_seasons = TVDBQuery.get_seasons(tvdb_id: tvdb_id, plex_id: plex_id)
-    imdbId = TVDBQuery.get_imdb_id(tvdb_id)
-    torrent_seasons = Rarbg::Search.get_torrents_by_id(imdbId)
+    threads = []
+    plex_seasons = {}
+    torrent_seasons = {}
+    threads << Thread.new { plex_seasons = TVDBQuery.get_seasons(tvdb_id: tvdb_id, plex_id: plex_id) }
+    threads << Thread.new { torrent_seasons = TorFinder::Tv.search(tvdb_id) }
+    threads.map(&:join)
     torrent_seasons.keys.each do |season| # season is a string
       torrent_seasons[season].keys.each do |episode| # episode is a string
         if !plex_seasons[season.to_i].nil? && !plex_seasons[season.to_i][episode.to_i].nil?
