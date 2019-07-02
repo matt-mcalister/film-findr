@@ -87,7 +87,8 @@ module PlexAPI
 
   def self.get_seasons_with_torrents(tvdb_id:, plex_id: nil)
     if plex_id.nil?
-      plex_id = self.find_by_tvdb_id(tvdb_id).ratingKey
+      item = self.find_by_tvdb_id(tvdb_id)
+      plex_id = item && item.ratingKey
     end
     threads = []
     plex_seasons = {}
@@ -103,6 +104,12 @@ module PlexAPI
           plex_seasons[season.to_i]["full_season"] = {}
           plex_seasons[season.to_i]["full_season"]["torrent_info"] = torrent_seasons[season][episode]
         end
+      end
+    end
+    QBitAPI::Torrent.all.each do |tor|
+      if tor.category["type"] == "tv" && tor.category["tvdbID"] == tvdb_id.to_i
+        episode = tor.category["episode"] || "full_season"
+        plex_seasons[tor.category["season"]][episode]["downloadInProgress"] = true
       end
     end
     plex_seasons
