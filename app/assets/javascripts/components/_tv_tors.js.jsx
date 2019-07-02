@@ -7,7 +7,30 @@ class TVTors extends React.Component {
       loading: true
     }
     this.selectSeason = this.selectSeason.bind(this)
+    this.addToPlex = this.addToPlex.bind(this)
+    this.downloadFullSeason = this.downloadFullSeason.bind(this)
   }
+
+  componentDidMount(){
+    fetch("/api/v1/films/get_seasons", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        tvdb_id: this.props.tvdbId
+      })
+    }).then(r => r.json())
+      .then(seasons => {
+        const seasonNums = Object.keys(seasons)
+        this.setState({
+          seasons: seasons,
+          selectedSeason: seasonNums[seasonNums.length - 1],
+          loading: false
+        })
+      })
+  }
+
 
   selectSeason(e){
     this.setState({
