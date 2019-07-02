@@ -58,7 +58,9 @@ module QBitAPI
       type: type,
       title: title,
       imdbID: imdbID,
-      tvdbID: tvdbID
+      tvdbID: tvdbID,
+      season: season,
+      episode: episode
     }.to_json
 
     body = "hash=#{torrent_hash}&urls=#{magnet_url}&savepath=#{savepath}&category=#{info}"
