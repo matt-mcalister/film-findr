@@ -83,6 +83,16 @@ class TVTors extends React.Component {
         title: this.props.seriesName,
         isLocal: false,
       })
+    }).then(() => {
+      this.setState({
+        seasons: {
+          ...this.state.seasons,
+          [this.state.selectedSeason]: {
+            ...this.state.seasons[this.state.selectedSeason],
+            full_season: {...this.state.seasons[this.state.selectedSeason]["full_season"], downloadInProgress: true}
+          }
+        }
+      })
     })
   }
 
