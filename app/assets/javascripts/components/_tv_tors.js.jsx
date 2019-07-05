@@ -92,10 +92,14 @@ class TVTors extends React.Component {
     }
     const seasons = Object.keys(this.state.seasons)
     let full_season = seasons.length > 0 && this.state.seasons[this.state.selectedSeason]["full_season"]
+    let full_season_in_plex = false
+    if (Object.keys(this.state.seasons[this.state.selectedSeason]).every(ep => ep === "full_season" || this.state.seasons[this.state.selectedSeason][ep].in_plex)) {
+      full_season_in_plex = true
+    }
     return (
       <div>
       {seasons.length > 0 && <SeasonPicker seasons={Object.keys(this.state.seasons)} selectedSeason={this.state.selectedSeason} selectSeason={this.selectSeason} />}
-      {full_season && full_season.downloadInProgress ? <p>Full Season Currently Downloading</p> : <button onClick={this.downloadFullSeason}>Full Season Download Available</button>}
+      {(full_season && !full_season_in_plex) && (full_season.downloadInProgress ? <p>Full Season Currently Downloading</p> : <button onClick={this.downloadFullSeason}>Full Season Download Available</button>)}
       {this.state.seasons[this.state.selectedSeason] && <EpisodesList episodes={this.state.seasons[this.state.selectedSeason]} addToPlex={this.addToPlex}/>}
       </div>
     )
