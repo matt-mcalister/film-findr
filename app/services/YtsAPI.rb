@@ -5,7 +5,7 @@ class YtsAPI
       NordVPN.restart
     end
     response = HTTParty.get("https://yts.am/api/v2/list_movies.json?limit=50&query_term=#{term}")
-    if response && response["data"]["movies"]
+    if response.response.code == "200" && response["data"]["movies"]
       response["data"]["movies"].uniq
     else
       []
