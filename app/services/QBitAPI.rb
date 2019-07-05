@@ -218,7 +218,13 @@ module QBitAPI
       puts "FILE NAME: #{file_name}"
       new_path = "#{destination_path}/#{self.save_path.split("/tv-shows/")[1]}#{file_name}"
       puts "NEW PATH: #{new_path}"
-      FileUtils.mv(original_path, new_path)
+      begin
+        FileUtils.mv(original_path, new_path)
+      rescue Errno::ENOENT => e
+        FileUtils.makedirs(new_path.split("/")[0...-1].join("/"))
+        puts "new folder made"
+        FileUtils.mv(original_path, new_path)
+      end
       puts "MOVED"
       delete_torrent
     end
@@ -239,7 +245,7 @@ module QBitAPI
       thread_pool = ThreadPool.new(50)
       self.ready_to_migrate.each do |tor|
         thread_pool.schedule do
-          tor.move_to_plex
+          tor.prepare_files_for_plex
         end
       end
       thread_pool.run!
