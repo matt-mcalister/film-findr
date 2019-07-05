@@ -107,9 +107,9 @@ module PlexAPI
       end
     end
     QBitAPI::Torrent.all.each do |tor|
-      if tor.category["type"] == "tv" && tor.category["tvdbID"] == tvdb_id.to_i
-        episode = tor.category["episode"] || "full_season"
-        plex_seasons[tor.category["season"]][episode]["downloadInProgress"] = true
+      if tor.category["type"].include?("tv") && tor.category["tvdbID"] == tvdb_id.to_i
+        episode = tor.category["episode"]
+        plex_seasons[tor.category["season"].to_i][episode]["downloadInProgress"] = true
       end
     end
     plex_seasons

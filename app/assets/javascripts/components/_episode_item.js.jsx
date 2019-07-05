@@ -1,5 +1,5 @@
 const EpisodeItem = ({ episode: { episodeName, filename, airedSeason, airedEpisodeNumber, in_plex, torrent_info, downloadInProgress }, addToPlex }) => {
-\    const image_url = filename ? ("https://www.thetvdb.com/banners/" + filename) : "https://bigriverequipment.com/wp-content/uploads/2017/10/no-photo-available.png"
+    const image_url = filename ? ("https://www.thetvdb.com/banners/" + filename) : "https://bigriverequipment.com/wp-content/uploads/2017/10/no-photo-available.png"
     if (!episodeName) {
       return null
     }
