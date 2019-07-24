@@ -182,10 +182,11 @@ module QBitAPI
     end
 
     def handle_mkv_files
-      if MkvInfo.new(self.save_path + file_to_move["name"]).uhd
+      mkv_info = MkvInfo.new(self.save_path + file_to_move["name"])
+      if mkv_info.uhd
         self.move_to_plex(isLocal: true)
       else
-        self.transcode
+        self.transcode(size: mkv_info.size)
       end
     end
 
@@ -201,8 +202,9 @@ module QBitAPI
       puts "DELETED"
     end
 
-    def transcode
-      Transcoder.transcode_from_folder(origin_folder: "#{self.save_path}/**/", destination_folder: self.save_path.gsub("/Qbit/PlexPending/tv-shows/", "/HandBroken/TV\ Shows/"))
+    def transcode(size: 1080)
+      resolution = size < 800 ? 720 : 1080
+      Transcoder.transcode_from_folder(preset: "Apple #{resolution}p30 Surround", origin_folder: "#{self.save_path}/**/", destination_folder: self.save_path.gsub("/Qbit/PlexPending/tv-shows/", "/HandBroken/TV\ Shows/"))
       delete_torrent
     end
 
@@ -234,7 +236,9 @@ module QBitAPI
     end
 
     def self.find_by_hash(hash)
-      self.all.find {|tor| tor.hash.downcase == hash.downcase}
+      self.all.find do |tor|
+        tor.hash.downcase == hash.downcase unless hash.nil? || tor.hash.nil?
+      end
     end
 
     def self.ready_to_migrate
